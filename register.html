@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <script src="/js/messenger.js" type="module"></script>
+</head>
+<body>
+    <div>
+        <div id="register-username"></div>
+        <button type="button" id="register-submit">Register</button>
+        <div id="register-error"></div>
+        <script type="module">
+            import { MessengerApplication } from "/js/messenger.js";
+    
+            // get references to DOM elements
+            let usernameInput = document.getElementById("register-username");
+            let error = document.getElementById("register-error");
+            let submit = document.getElementById("register-submit");
+            let downloadLink = document.getElementById("register-key-download");
+            
+            function registerHandler() {
+                let username = usernameInput.value;
+
+                if (MessengerApplication.usernameAvailable(username)) { // check if username is available
+                    let key = MessengerApplication.register(username); // register user
+                    downloadLink.setAttribute("href", "data:text/plain;base64," + btoa(key)); // base64 encode the key and set the uri on the download link
+                    downloadLink.setAttribute("download", username + ".key");
+                }
+                {
+                    error.innerHTML = "That username is not available.";
+                }
+            }
+    
+            submit.addEventListener("click", registerHandler);
+        </script>
+    </div>
+    <div id="key-download-popup">
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" id="register-key-download"></a>
+        <script>
+
+        </script>
+    </div>
+</body>
+</html>
