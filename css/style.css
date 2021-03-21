@@ -4,7 +4,9 @@
 :root {
     --dark: #040d21;
     --light: #fff;
-    --cream: #f7ede6;
+    --palette1: #f7ede6;
+    --palette2: #f34e4f;
+    --palette3: #2f494a;
 }
 
 body {
