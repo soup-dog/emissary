@@ -13,12 +13,15 @@
     z-index: -1;
 }
 
+.neumorphic {
+    box-shadow:  20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+}
+
 .description {
     width: min(50%, 500px);
     padding: 5%;
     background-color: var(--light);
     border-radius: 5px;
-    box-shadow:  20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
 }
 
 .logo {
