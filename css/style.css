@@ -1,0 +1,52 @@
+/* import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Noto+Sans:wght@400;700&family=Roboto:wght@100;300;400&display=swap');
+
+:root {
+    --dark: #040d21;
+    --light: #fff;
+    --cream: #f7ede6;
+}
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+    font-family: 'Noto sans', sans-serif;
+    font-weight: 700;
+}
+
+a {
+    font-family: 'Roboto', sans-serif;
+    text-decoration: none;
+}
+
+.gradient-text {
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-color: white;
+}
+
+.mint-blue-gradient {
+    background-image: -webkit-linear-gradient(70deg, #a2facf, #64acff);
+}
+
+.pink-blue-gradient {
+    background-image: -webkit-linear-gradient(70deg, #db469f,#2188ff);
+}
+
+.wide-block {
+    display: block;
+    width: 100%;
+    height: 500px;
+}
+
+.dark {
+    
+}
+
+.light {
+    background-color: var(--light);
+}

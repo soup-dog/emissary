@@ -1,0 +1,46 @@
+.display-box {
+    display: flex;
+    width: 100%;
+    height: 50%;
+    margin: 5%;
+}
+
+.background {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    z-index: -1;
+}
+
+.description {
+    width: min(50%, 500px);
+    padding: 5%;
+    background-color: var(--light);
+    border-radius: 5px;
+    box-shadow:  20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+}
+
+.logo {
+    width: 100%;
+}
+
+.login-register {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.button {
+    padding: 10px;
+    margin: 10px;
+    width: max(10%, 100px);
+    text-align: center;
+    border-radius: 5px;
+    background-color: var(--dark);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    color: var(--light);
+    text-decoration: none;
+    box-shadow: 0 0 0 1px rgba(53,72,91,.1),0 3px 2px rgba(0,0,0,.04),0 7px 5px rgba(0,0,0,.02),0 13px 10px rgba(0,0,0,.02),0 22px 17px rgba(0,0,0,.02);
+}

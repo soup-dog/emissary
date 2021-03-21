@@ -1,0 +1,28 @@
+.header-logo {
+    height: 50%;
+}
+
+.header-links {
+    display: flex;
+    width: 50%;
+}
+
+.header-links a {
+    text-align: center;
+    vertical-align: middle;
+    color: black;
+    margin: 5%;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 3em;
+    background-color: var(--light);
+}
+
+header * {
+    margin: 1%;
+}
