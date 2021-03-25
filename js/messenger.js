@@ -1,7 +1,3 @@
-// import download from "download.js"
-
-import { download } from "./download.js";
-
 const USER_STORE_STORAGE_KEY = "users";
 const USER_SESSION_STORAGE_KEY = "user";
 
@@ -10,6 +6,8 @@ var aesAlgorithmKeyGen = {
     // AesKeyGenParams
     length: 256
 };
+
+
 
 class User {
     constructor(username) {
@@ -34,29 +32,39 @@ class MessengerSession {
 }
 
 export class MessengerApplication {
-    static login(aesKey, iv, username) {
-        let userStore = MessengerApplication.getUserStore(); // get user store from local storage
-        if (userStore == null) { // if user store does not exist
-            localStorage.setItem(userStore_STORAGE_KEY, {}); // create a new empty one
-            return false;
-        }
+    static _instance = new MessengerApplication(USER_STORE_STORAGE_KEY, USER_SESSION_STORAGE_KEY);
+    static loginError = {
+        MISSING: 1
+    };
+    static registerError = {
+        USERNAME_NOT_AVAILABLE: 1
+    };
+    
 
-        console.log(userStore); // DEBUG, remove for release
+    constructor(userStoreLocation, sessionStoreLocation) {
+        this.userStoreLocation = userStoreLocation;
+        this.sessionStoreLocation = sessionStoreLocation;
+    }
 
+    static getInstance() {
+        return MessengerApplication._instance;
+    }
+
+    login(aesKey, iv, username) {
         let user = null;
 
-        if (userStore.hasOwnProperty(username)) { // if username is in the store
-            user = User.fromEncrypted(aesKey, iv, userStore[username]); // try decrypting the associated encrypted data
+        if (this.userStore.hasOwnProperty(username)) { // if username is in the store
+            user = User.fromEncrypted(aesKey, iv, this.userStore[username]); // try decrypting the associated encrypted data
         }
 
         if (user == null) { // lookup by username did not succeed
-            let validUsers = userStore.values()
+            let validUsers = this.userStore.values()
                 .map((encrypted) => User.fromEncrypted(aesKey, iv, encrypted)) // try decrypt
                 .filter((decryptionAttempt) => decryptionAttempt != null) // remove failed decryption attempts
                 .filter((user) => user.username = username); // remove users without the correct username
 
             if (validUsers.length == 0) { // no valid user found
-                return false;
+                throw MessengerApplication.loginError.MISSING;
             }
 
             user = validUsers[0]; // get first valid user
@@ -64,45 +72,39 @@ export class MessengerApplication {
 
         let session = new MessengerSession(user); // create session
 
-        sessionStorage.setItem(USER_SESSION_STORAGE_KEY, JSON.stringify(session)); // store session in sessin storage
-        return true;
+        sessionStorage.setItem(USER_SESSION_STORAGE_KEY, JSON.stringify(session)); // store session in session storage
     }
 
-    static logout(session) {
+    logout(session) {
         sessionStorage.removeItem(USER_STORE_STORAGE_KEY); // remove session from session storage
         return true;
     }
 
-    static usernameAvailable(username) {
-        let userStore = MessengerApplication.getUserStore();
-
-        return userStore == undefined || userStore == null || !userStore.keys.contains(username); // user store doesn't exist or username is not in the user store
+    usernameAvailable(username) {
+        return !Object.keys(this.userStore).some(key => key == username); // username is not in the user store
     }
 
-    static async register(username) {
-        if (!MessengerApplication.usernameAvailable(username)) { return null; }
-
-        // get user store from local storage or empty object if it does not exist
-        let userStore = localStorage.getItem(USER_STORE_STORAGE_KEY) ?? {};
+    async register(username) {
+        if (!this.usernameAvailable(username)) { throw MessengerApplication.registerError.USERNAME_NOT_AVAILABLE; }
 
         let aesKey = await window.crypto.subtle.generateKey(aesAlgorithmKeyGen, true, ["encrypt"]); // create an extractable AES key
 
         let completeKey = aesKey;
 
-        MessengerApplication.setUserStore(userStore); // store changes in local storage
-
         return completeKey;
     }
 
-    static setUserStore(store) {
-        localStorage.setItem(USER_STORE_STORAGE_KEY, JSON.stringify(store));
+    set userStore(value) {
+        localStorage.setItem(this.userStoreLocation, JSON.stringify(value));
     }
     
-    static getUserStore() {
-        console.log()
-        return JSON.parse(localStorage.getItem(USER_STORE_STORAGE_KEY));
+    get userStore() {
+        // get user store from local storage or empty object if it does not exist
+        return JSON.parse(localStorage.getItem(this.userStoreLocation)) ?? {};
     }
 }
+
+export let app = MessengerApplication.getInstance();
 
 let user = new User("bob");
 console.log(JSON.stringify(user));
@@ -113,4 +115,4 @@ function main() {
 
 }
 
-export default {MessengerApplication};
+export default {MessengerApplication, app};

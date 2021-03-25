@@ -13,23 +13,25 @@
         <button type="button" id="register-submit">Register</button>
         <p id="register-error"></p>
         <script type="module">
-            import { MessengerApplication } from "/js/messenger.js";
+            import { app } from "/js/messenger.js";
     
             // get references to DOM elements
             let usernameInput = document.getElementById("register-username");
             let error = document.getElementById("register-error");
             let submit = document.getElementById("register-submit");
             let downloadLink = document.getElementById("register-key-download");
+            let downloadPopup = document.getElementById("key-download-popup");
             
             function registerHandler() {
                 let username = usernameInput.value;
 
-                if (MessengerApplication.usernameAvailable(username)) { // check if username is available
-                    let key = MessengerApplication.register(username); // register user
+                if (app.usernameAvailable(username)) { // check if username is available
+                    let key = app.register(username); // register user
                     downloadLink.setAttribute("href", "data:text/plain;base64," + btoa(key)); // base64 encode the key and set the uri on the download link
                     downloadLink.setAttribute("download", username + ".key");
+                    downloadPopup.style["display"] = "block";
                 }
-                {
+                else {
                     error.innerHTML = "That username is not available.";
                 }
             }
@@ -37,10 +39,8 @@
             submit.addEventListener("click", registerHandler);
         </script>
     </div>
-    <div id="key-download-popup">
-        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" id="register-key-download"></a>
-        <script>
-
+    <div id="key-download-popup" style="display: none">
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" id="register-key-download">Key</a>
         </script>
     </div>
 </body>

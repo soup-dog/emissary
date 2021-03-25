@@ -12,7 +12,7 @@
     <p id="login-error"></p>
     <button type="button" id="login-submit">Login</button>
     <script type="module">
-        import MessengerApplication from "/js/messenger.js";
+        import app from "/js/messenger.js";
 
         // get references to DOM elements
         let keyFile = document.getElementById("login-key-file");
@@ -21,7 +21,7 @@
         let submit = document.getElementById("login-submit");
         
         function loginHandler() {
-            if (MessengerApplication.login()) { // if login is successful
+            if (app.login()) { // if login is successful
                 window.location.replace("/app.html"); // redirect to application
             }
             else {
