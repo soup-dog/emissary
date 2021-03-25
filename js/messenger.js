@@ -33,13 +33,13 @@ class MessengerSession {
 
 export class MessengerApplication {
     static _instance = new MessengerApplication(USER_STORE_STORAGE_KEY, USER_SESSION_STORAGE_KEY);
+    // error enums
     static loginError = {
         MISSING: 1
     };
     static registerError = {
         USERNAME_NOT_AVAILABLE: 1
     };
-    
 
     constructor(userStoreLocation, sessionStoreLocation) {
         this.userStoreLocation = userStoreLocation;
@@ -85,26 +85,29 @@ export class MessengerApplication {
     }
 
     async register(username) {
+        // validate username is available
         if (!this.usernameAvailable(username)) { throw MessengerApplication.registerError.USERNAME_NOT_AVAILABLE; }
 
         let aesKey = await window.crypto.subtle.generateKey(aesAlgorithmKeyGen, true, ["encrypt"]); // create an extractable AES key
 
-        let completeKey = aesKey;
+        // concatenate keys to produce complete key
+        let completeKey = window.crypto.subtle.exportKey("raw", aesKey);
 
         return completeKey;
     }
 
     set userStore(value) {
+        // convert value to json string and store it in the user store
         localStorage.setItem(this.userStoreLocation, JSON.stringify(value));
     }
     
     get userStore() {
-        // get user store from local storage or empty object if it does not exist
+        // get the user store from local storage or empty object if it does not exist
         return JSON.parse(localStorage.getItem(this.userStoreLocation)) ?? {};
     }
 }
 
-export let app = MessengerApplication.getInstance();
+export let app = MessengerApplication.getInstance(); // export a reference to the instance of MessengerApplication
 
 let user = new User("bob");
 console.log(JSON.stringify(user));
