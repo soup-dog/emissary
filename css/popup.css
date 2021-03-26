@@ -15,4 +15,15 @@
     height: 30%;
     padding: 2%;
     background-color: var(--light);
+    border-radius: 5px;
+}
+
+.popup-close {
+    float: right;
+    width: 5%;
+    text-align: right;
+}
+
+.popup-close:hover {
+    cursor: pointer;
 }

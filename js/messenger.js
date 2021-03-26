@@ -23,11 +23,40 @@ class User {
 
         
     }
+
+    pack(userKey) {
+        
+    }
 }
 
 class MessengerSession {
     constructor(user) {
         this.user = user;
+    }
+}
+
+export class UserKey {
+    constructor(aesKey, iv) {
+        this.aesKey = aesKey;
+        this.iv = iv;
+    }
+
+    static loadFromArrayBuffer(arr) {
+        return new UserKey(arr.subarray(0, 32), arr.subarray(0, 16));
+    }
+    
+    export() {
+        return [this.aesKey, this.iv];
+    }
+
+    async exportAsDataURL() {
+        let blob = new Blob(this.export());
+
+        return new Promise(resolve => {
+            let reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(blob); // read the key as a data url
+        });
     }
 }
 
@@ -81,7 +110,10 @@ export class MessengerApplication {
     }
 
     usernameAvailable(username) {
-        return !Object.keys(this.userStore).some(key => key == username); // username is not in the user store
+        return !( // not
+            [null, undefined, ""].some(value => value == username) // invalid
+            || Object.keys(this.userStore).some(key => key == username) // or unavailable
+            );
     }
 
     async register(username) {
@@ -89,11 +121,15 @@ export class MessengerApplication {
         if (!this.usernameAvailable(username)) { throw MessengerApplication.registerError.USERNAME_NOT_AVAILABLE; }
 
         let aesKey = await window.crypto.subtle.generateKey(aesAlgorithmKeyGen, true, ["encrypt"]); // create an extractable AES key
+        // produce cryptographically random initialisation vector
+        let iv = window.crypto.getRandomValues(new Uint8Array(16));
 
-        // concatenate keys to produce complete key
-        let completeKey = window.crypto.subtle.exportKey("raw", aesKey);
+        user = new User();
 
-        return completeKey;
+        this.userStore[username] = user;
+
+        // create promise that returns an instance of UserKey containing the keys that were just created
+        return window.crypto.subtle.exportKey("raw", aesKey).then(key => new UserKey(key, iv));
     }
 
     set userStore(value) {

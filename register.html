@@ -28,19 +28,13 @@
                 let username = usernameInput.value;
 
                 if (app.usernameAvailable(username)) { // check if username is available
-                    app.register(username).then(
-                        function (key) {
-                            let blob = new Blob([key]);
-                            let reader = new FileReader();
-                            reader.addEventListener("loadend", () => { // when reader is done reading
-                                downloadLink.setAttribute("href", reader.result); // set the uri on the download link
-                                downloadLink.setAttribute("download", username + ".key"); // set the downlaod filename
-                                downloadPopup.style["display"] = "flex"; // show the key download popup
-                            });
-
-                            reader.readAsDataURL(blob); // read the key as a data url
-                        }
-                    ) // register user
+                    app.register(username)
+                        .then(userKey => userKey.exportAsDataURL())
+                        .then(dataURL => {
+                            downloadLink.setAttribute("href", dataURL); // set the uri on the download link
+                            downloadLink.setAttribute("download", username + ".key"); // set the download filename
+                            downloadPopup.style["display"] = "flex"; // show the key download popup
+                        });
                 }
                 else {
                     error.innerHTML = "That username is not available.";
@@ -51,8 +45,10 @@
         </script>
     </div>
     <div class="popup-container" id="register-download-popup" style="display: none">
-        <div class="popup">
-            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" id="register-key-download">Key</a>
+        <div class="neumorphic popup">
+            <!-- <img src="cross.svg" alt="Exit cross" class="popup-close" onclick="document.getElementById('register-download-popup').style['display'] = 'none'"> -->
+            <p>This is your unique key file containing the complete key for your account. <b>Keep it safe</b>. <b>Do not share it with anyone</b>. If you lose this key, <b>you will not be able to access your account</b>.</p>
+            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" id="register-key-download" class="big-button" onclick="window.location = '/login.html'">Key Download</a>
         </div>
     </div>
 </body>
