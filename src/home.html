@@ -8,6 +8,7 @@
     <!-- stylesheets -->
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/home.css">
+    <script src="/js/bar.js"></script>
 </head>
 <body>
     <img src="/img/home.svg" class="background"></svg>
@@ -26,7 +27,7 @@
         <section class="feature-section">
             <div class="neumorphic description">
                 <img src="/img/logo.svg" alt="Emissary logo" class="logo">
-                <p>Welcome to Emissary, the <a href="#secure">secure</a>, <a href="#static">static</a> messenger.</p>
+                <p>Welcome to Emissary, the <a href="#secure">secure</a>, <a href="#local">local</a> messenger.</p>
             </div>
         </section>
         <div class="login-register">
@@ -35,22 +36,38 @@
         </div>
     </div>
 
-    <div class="dark section">
+    <div class="dark section-container">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 122.22">
             <path d="M.5,1016.61s420.8-132,658.41,0c240.09,133.39,531,0,531,0s264-133.5,730.55,0v62.89H.5Z" fill="currentColor" transform="translate(-0.5 -957.28)"/>
         </svg>
         <section>
-            <div class="info-block">
+            <div class="info-block" id="#secure">
                 <h1>Secure</h1>
                 <p>Emissary uses <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a>-<a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Cipher_block_chaining_(CBC)">CBC</a> to securely store your data and <a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)">RSA</a> to send your messages securely.</p>
             </div>
-            <h1>Static (animated graphic of static on a tv screen) (maybe only activate on hover)</h1>
-            <h1>Local (animated graphic of the person switching not the computer)</h1>
-            <p>Only one computer required.</p>
+            <img src="/img/secure.gif" alt="">
         </section>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 122.22">
             <path d="M.5,1016.61s420.8-132,658.41,0c240.09,133.39,531,0,531,0s264-133.5,730.55,0v62.89H.5Z" fill="currentColor" transform="translate(-0.5 -957.28)"/>
         </svg>
     </div>
+
+    <div class="light section-container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 122.22">
+            <path d="M.5,1016.61s420.8-132,658.41,0c240.09,133.39,531,0,531,0s264-133.5,730.55,0v62.89H.5Z" fill="currentColor" transform="translate(-0.5 -957.28)"/>
+        </svg>
+        <section>
+            <div class="info-block">
+                <h1>Local</h1>
+                <p>Only one computer required.</p>
+            </div>
+        </section>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 122.22">
+            <path d="M.5,1016.61s420.8-132,658.41,0c240.09,133.39,531,0,531,0s264-133.5,730.55,0v62.89H.5Z" fill="currentColor" transform="translate(-0.5 -957.28)"/>
+        </svg>
+    </div>
+
+    <h1>Local (animated graphic of the person switching not the computer)</h1>
+    <p>Only one computer required.</p>
 </body>
 </html>

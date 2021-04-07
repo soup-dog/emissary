@@ -27,6 +27,10 @@ a {
     text-decoration: none;
 }
 
+a:hover {
+    text-decoration: underline;
+}
+
 .neumorphic {
     box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
 }
@@ -60,65 +64,72 @@ a {
     box-shadow: 0 0 0 1px rgba(53,72,91,.1),0 3px 2px rgba(0,0,0,.04),0 7px 5px rgba(0,0,0,.02),0 13px 10px rgba(0,0,0,.02),0 22px 17px rgba(0,0,0,.02);
 }
 
-.section {
+.section-container {
     margin-top: 20%;
 }
 
-.section section {
+.section-container section {
     padding: 5%;
     width: 90%;
+    display: flex;
+    justify-content: space-evenly;
 }
 
-.section section * {
+.section-container section * {
     margin: 0px;
 }
 
-.section svg:first-child {
+.section-container svg:first-child {
     display: block;
 }
 
-.section svg:last-child {
+.section-container svg:last-child {
     display: block;
     transform: scaleY(-1);
 }
 
-.dark.section section {
-    background-color: var(--dark);
-}
-
-.dark.section svg:first-child path {
-    color: var(--dark);
-}
-
-.dark.section svg:last-child path {
-    color: var(--dark);
-}
-
-.dark.section section * {
-    color: var(--light);
-}
-
-.light.section section {
-    background-color: var(--light);
-}
-
-.light.section svg:first-child path {
-    color: var(--light);
-}
-
-.light.section svg:last-child path {
-    color: var(--light);
-}
-
-.light.section section * {
-    color: var(--dark);
+.section-container section img {
+    width: 40%;
 }
 
 .info-block {
     display: block;
-    width: 50%;
+    width: 40%;
+    margin: 0;
 }
 
 .info-block h1 {
     font-size: min(10vw);
+}
+
+.dark.section-container section {
+    background-color: var(--dark);
+}
+
+.dark.section-container svg:first-child path {
+    color: var(--dark);
+}
+
+.dark.section-container svg:last-child path {
+    color: var(--dark);
+}
+
+.dark.section-container section * {
+    color: var(--light);
+}
+
+.light.section-container section {
+    background-color: var(--light);
+}
+
+.light.section-container svg:first-child path {
+    color: var(--light);
+}
+
+.light.section-container svg:last-child path {
+    color: var(--light);
+}
+
+.light.section-container section * {
+    color: var(--dark);
 }
