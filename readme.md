@@ -7,7 +7,7 @@
 
 ## Ubuntu/Debian
 1. Clone the repository with `git clone github.com/soup-dog/local-messenger`
-2. Update the package cache with 
+2. Update the package cache with `sudo apt update`.
 2. Install node.js and npm with `sudo apt install nodejs`
 3. Navigate to the repository root and run `npm install` to fetch the required node modules.
 4. Navigate to the app root in the repository (`src/app`) and run `npm install` to fetch the required node modules.
