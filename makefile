@@ -1,3 +1,4 @@
+SHELL = /bin/sh
 LANDING_PATH = src/landing
 APP_PATH = src/messenger-app
 
