@@ -9,13 +9,13 @@ clean:
 	$(RM) -r $(OUTPUT_DIR)
 	mkdir $(OUTPUT_DIR)
 
-all:
-# build landing project
+landing:
 	-cp $(LANDING_DIR)/* dist
 	cp -r $(LANDING_DIR)/css dist
 	cp -r $(LANDING_DIR)/img dist
 	cd $(LANDING_DIR) && tsc
-# build app
+
+app:
 	cd $(APP_DIR) && ng build
 # hack to fix problem with hosting angular app on GitHub Pages
 	for route in $(APP_ROUTES); do cp "$(APP_OUTPUT_DIR)/index.html" "$(APP_OUTPUT_DIR)/$$route.html"; done
