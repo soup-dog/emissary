@@ -10,7 +10,7 @@
 2. Update the package cache with `sudo apt update`.
 3. Install node.js and npm with `sudo apt install nodejs`
 4. Navigate to the repository root and run `npm install` to fetch the required node modules.
-5. Navigate to the app root in the repository (`src/app`) and run `npm install` to fetch the required node modules.
+5. Navigate to the app root in the repository (`src/messenger-app`) and run `npm install` to fetch the required node modules.
 6. Navigate to the repository root and build the project with `make`.
 7. Get your build output from `dist` and do what you want with it.
 
