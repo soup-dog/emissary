@@ -1,5 +1,6 @@
 SHELL = /bin/sh
 LANDING_DIR = src/landing
+LANDING_DIR_SRC = $(LANDING_DIR)/src
 APP_DIR = src/messenger-app
 OUTPUT_DIR = dist
 APP_OUTPUT_DIR = $(OUTPUT_DIR)/app
@@ -20,9 +21,9 @@ clean:
 	mkdir $(OUTPUT_DIR)
 
 landing:
-	-cp $(LANDING_DIR)/* dist
-	cp -r $(LANDING_DIR)/css dist
-	cp -r $(LANDING_DIR)/img dist
+	-cp $(LANDING_DIR_SRC)/* dist
+	cp -r $(LANDING_DIR_SRC)/css dist
+	cp -r $(LANDING_DIR_SRC)/img dist
 	cd $(LANDING_DIR) && tsc
 
 app:
