@@ -5,6 +5,12 @@ OUTPUT_DIR = dist
 APP_OUTPUT_DIR = $(OUTPUT_DIR)/app
 APP_ROUTES = "app" "profile"
 
+ifdef PROD
+	APP_BUILD_ARGS = --prod
+else
+	APP_BUILD_ARGS = 
+endif
+
 clean:
 	$(RM) -r $(OUTPUT_DIR)
 	mkdir $(OUTPUT_DIR)
@@ -16,6 +22,6 @@ landing:
 	cd $(LANDING_DIR) && tsc
 
 app:
-	cd $(APP_DIR) && ng build
+	cd $(APP_DIR) && ng build $(APP_BUILD_ARGS)
 # hack to fix problem with hosting angular app on GitHub Pages
 	for route in $(APP_ROUTES); do cp "$(APP_OUTPUT_DIR)/index.html" "$(APP_OUTPUT_DIR)/$$route.html"; done
