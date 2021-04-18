@@ -11,6 +11,9 @@ else
 	APP_BUILD_ARGS = 
 endif
 
+.PHONY: all
+all: landing app
+
 .PHONY: clean
 clean:
 	$(RM) -r $(OUTPUT_DIR)
