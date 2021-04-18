@@ -11,6 +11,7 @@ else
 	APP_BUILD_ARGS = 
 endif
 
+.PHONY: clean
 clean:
 	$(RM) -r $(OUTPUT_DIR)
 	mkdir $(OUTPUT_DIR)
