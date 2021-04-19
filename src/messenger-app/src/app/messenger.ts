@@ -17,7 +17,7 @@ export class User {
         });
     }
 
-    public loadFromJSON(json: string) {
+    public static loadFromJSON(json: string): User {
         const jsonUser = JSON.parse(json);
         return new User(
             jsonUser.username, jsonUser.profilePicture
