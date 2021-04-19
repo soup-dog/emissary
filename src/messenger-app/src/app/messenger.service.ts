@@ -1,28 +1,37 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { User } from './messenger';
+import { NormalEvent } from './normal-event';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessengerService {
   public static readonly USER_STORAGE_KEY = "user";
-  private user: User | null;
+  private _user: User | null;
+  public userSet: NormalEvent<User> = new NormalEvent<User>();
 
   constructor() {
-    this.user = this.getUser();
+    this._user = this.getUser();
+  }
+
+  public setUserPfp(profilePicture: ArrayBuffer): void {
+    if (this._user == null) { return; }
+    this._user.profilePicture = profilePicture;
+    this.pushUser();
   }
 
   register(username: string) {
-    this.user = new User(username);
+    this._user = new User(username);
   }
 
-  pullUser(): void {
-    this.user = this.getUser();
+  private pullUser(): void {
+    this._user = this.getUser();
   }
 
-  pushUser(): void {
-    if (this.user == null) { return; }
-    this.setUser(this.user);
+  private pushUser(): void {
+    if (this._user == null) { return; }
+    this.setUser(this._user);
   }
 
   getUser(): User | null {
@@ -33,6 +42,7 @@ export class MessengerService {
   }
 
   setUser(user: User) {
-    sessionStorage.setItem(MessengerService.USER_STORAGE_KEY, JSON.stringify(user));
+    sessionStorage.setItem(MessengerService.USER_STORAGE_KEY, JSON.stringify(user)); // set user in session storage
+    this.userSet.dispatch(user); // dispatch event
   }
 }
