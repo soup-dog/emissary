@@ -18,4 +18,10 @@ export class NormalEvent<T> {
             }
         }
     }
+
+    dispatch(event: T) {
+        for (let handler of this._handlers) {
+            handler(event);
+        }
+    }
 }
