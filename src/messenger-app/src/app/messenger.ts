@@ -2,9 +2,9 @@ export class User {
     public username: string;
     public profilePicture: ArrayBuffer;
 
-    public constructor(username: string, profilePicture: ArrayBuffer) {
+    public constructor(username: string, profilePicture?: ArrayBuffer) {
         this.username = username;
-        this.profilePicture = profilePicture;
+        this.profilePicture = profilePicture ?? new ArrayBuffer(0);
     }
 
     public async getPfpDataURL(): Promise<string> {
