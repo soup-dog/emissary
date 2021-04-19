@@ -1,6 +1,6 @@
 export class User {
-    username: string;
-    profilePicture: ArrayBuffer;
+    public username: string;
+    public profilePicture: ArrayBuffer;
 
     public constructor(username: string, profilePicture: ArrayBuffer) {
         this.username = username;
