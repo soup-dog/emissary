@@ -1,15 +1,15 @@
 SHELL = /bin/sh
-LANDING_DIR = src/landing
-LANDING_DIR_SRC = $(LANDING_DIR)/src
-APP_DIR = src/messenger-app
-OUTPUT_DIR = dist
-APP_OUTPUT_DIR = $(OUTPUT_DIR)/app
-APP_ROUTES = "app" "register" "account"
+landing_dir = src/landing
+landing_dir_src = $(landing_dir)/src
+app_dir = src/messenger-app
+output_dir = dist
+app_output_dir = $(output_dir)/app
+app_routes = "app" "register" "account"
 
 ifdef PROD
-	APP_BUILD_ARGS = --prod
+	app_build_args = --prod
 else
-	APP_BUILD_ARGS = 
+	app_build_args = 
 endif
 
 .PHONY: all
@@ -17,19 +17,19 @@ all: landing app
 
 .PHONY: clean
 clean:
-	$(RM) -r $(OUTPUT_DIR)
-	mkdir $(OUTPUT_DIR)
+	$(RM) -r $(output_dir)
+	mkdir $(output_dir)
 
 landing:
-	-cp $(LANDING_DIR_SRC)/* dist
-	cp -r $(LANDING_DIR_SRC)/css dist
-	cp -r $(LANDING_DIR_SRC)/img dist
-	cd $(LANDING_DIR) && tsc
+	-cp $(landing_dir_src)/* dist
+	cp -r $(landing_dir_src)/css dist
+	cp -r $(landing_dir_src)/img dist
+	cd $(landing_dir) && tsc
 
 app:
-	cd $(APP_DIR) && ng build $(APP_BUILD_ARGS)
+	cd $(app_dir) && ng build $(app_build_args)
 	make app-static-fix
 
 app-static-fix:
 # hack to fix problem with hosting angular app statically
-	for route in $(APP_ROUTES); do cp "$(APP_OUTPUT_DIR)/index.html" "$(APP_OUTPUT_DIR)/$$route.html"; done
+	for route in $(app_routes); do cp "$(app_output_dir)/index.html" "$(app_output_dir)/$$route.html"; done
