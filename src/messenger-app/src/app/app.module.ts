@@ -8,6 +8,8 @@ import { MessageListComponent } from './message-list/message-list.component';
 import { AccountComponent } from './account/account.component';
 import { FileValueAccessorDirective } from './file-value-accessor.directive';
 import { SmallProfileComponent } from './small-profile/small-profile.component';
+import { RegisterComponent } from './register/register.component';
+import { MessengerComponent } from './messenger/messenger.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +17,9 @@ import { SmallProfileComponent } from './small-profile/small-profile.component';
     MessageListComponent,
     AccountComponent,
     FileValueAccessorDirective,
-    SmallProfileComponent
+    SmallProfileComponent,
+    RegisterComponent,
+    MessengerComponent
   ],
   imports: [
     BrowserModule,
