@@ -1,1 +1,7 @@
-<p>register works!</p>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <label>
+        Username: <input type="text" name="" id="" formControlName="username">
+    </label>
+    <!-- <input type="submit" value="" [disabled]="!registerForm.valid"> -->
+    <button type="submit" [disabled]="!registerForm.valid">submit</button>
+</form>
