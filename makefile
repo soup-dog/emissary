@@ -28,5 +28,5 @@ landing:
 
 app:
 	cd $(APP_DIR) && ng build $(APP_BUILD_ARGS)
-# hack to fix problem with hosting angular app on GitHub Pages
+# hack to fix problem with hosting angular app statically
 	for route in $(APP_ROUTES); do cp "$(APP_OUTPUT_DIR)/index.html" "$(APP_OUTPUT_DIR)/$$route.html"; done
