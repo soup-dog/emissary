@@ -1,20 +1,10 @@
 export class User {
     public username: string;
-    public profilePicture: ArrayBuffer;
+    public pfpDataURL: string;
 
-    public constructor(username: string, profilePicture?: ArrayBuffer) {
+    public constructor(username: string, pfpDataURL?: string) {
         this.username = username;
-        this.profilePicture = profilePicture ?? new ArrayBuffer(0);
-    }
-
-    public async getPfpDataURL(): Promise<string> {
-        const blob = new Blob([this.profilePicture]);
-
-        return new Promise(resolve => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(<string>reader.result); // cast result to string (because it is a data url) and resolve promise
-            reader.readAsDataURL(blob); // read the key as a data url
-        });
+        this.pfpDataURL = pfpDataURL ?? "";
     }
 
     public static loadFromJSON(json: string): User {
