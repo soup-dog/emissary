@@ -4,7 +4,7 @@ LANDING_DIR_SRC = $(LANDING_DIR)/src
 APP_DIR = src/messenger-app
 OUTPUT_DIR = dist
 APP_OUTPUT_DIR = $(OUTPUT_DIR)/app
-APP_ROUTES = "app" "profile"
+APP_ROUTES = "app" "register" "account"
 
 ifdef PROD
 	APP_BUILD_ARGS = --prod
@@ -28,5 +28,8 @@ landing:
 
 app:
 	cd $(APP_DIR) && ng build $(APP_BUILD_ARGS)
+	make app-static-fix
+
+app-static-fix:
 # hack to fix problem with hosting angular app statically
 	for route in $(APP_ROUTES); do cp "$(APP_OUTPUT_DIR)/index.html" "$(APP_OUTPUT_DIR)/$$route.html"; done
