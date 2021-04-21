@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from '../messenger';
+import { MessengerService } from '../messenger.service';
 
 @Component({
   selector: 'app-small-profile',
@@ -7,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SmallProfileComponent implements OnInit {
 
-  constructor() { }
+  constructor(private messenger: MessengerService) { }
 
   ngOnInit(): void {
+    this.messenger.requireLoggedIn();
   }
 
+  public requireUser(): User {
+    return this.messenger.requireUser();
+  }
 }
