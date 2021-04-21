@@ -37,7 +37,7 @@ export class MessengerService {
 
   public requireUser(): User {
     if (!this.loggedIn) {
-      throw Error("User is not logged in. WARNING: This error should not been raised. This error should have been guarded by the requiresLoggedIn decorator.");
+      throw Error("User is not logged in. WARNING: This error should not been raised, it should have been guarded by the requiresLoggedIn decorator.");
     }
 
     return <User>this._user;
@@ -50,13 +50,13 @@ export class MessengerService {
   }
 
   @MessengerService.requiresLoggedIn public getMessages(): Message[] {
-    return (<User>this._user).messages;
+    return this.requireUser().messages;
   }
 
   @MessengerService.requiresLoggedIn public setUserPfpFromFile(file: File): void {
     const reader = new FileReader();
     reader.onloadend = () => {
-      (<User>this._user).pfpDataURL = <string>reader.result;
+      this.requireUser().pfpDataURL = <string>reader.result;
       this.pushUser();
     }; // cast result to string (because it is a data url) and set pfpDataURL
     reader.readAsDataURL(file); // read the image as a data url
