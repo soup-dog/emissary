@@ -19,7 +19,7 @@ import { MessengerComponent } from './messenger/messenger.component';
     FileValueAccessorDirective,
     SmallProfileComponent,
     RegisterComponent,
-    MessengerComponent
+    MessengerComponent,
   ],
   imports: [
     BrowserModule,
