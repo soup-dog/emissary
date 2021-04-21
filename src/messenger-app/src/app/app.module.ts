@@ -10,6 +10,7 @@ import { FileValueAccessorDirective } from './file-value-accessor.directive';
 import { SmallProfileComponent } from './small-profile/small-profile.component';
 import { RegisterComponent } from './register/register.component';
 import { MessengerComponent } from './messenger/messenger.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { MessengerComponent } from './messenger/messenger.component';
     SmallProfileComponent,
     RegisterComponent,
     MessengerComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
