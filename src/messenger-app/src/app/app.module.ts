@@ -11,6 +11,7 @@ import { SmallProfileComponent } from './small-profile/small-profile.component';
 import { RegisterComponent } from './register/register.component';
 import { MessengerComponent } from './messenger/messenger.component';
 import { LoginComponent } from './login/login.component';
+import { TopBarComponent } from './top-bar/top-bar.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { LoginComponent } from './login/login.component';
     RegisterComponent,
     MessengerComponent,
     LoginComponent,
+    TopBarComponent,
   ],
   imports: [
     BrowserModule,
