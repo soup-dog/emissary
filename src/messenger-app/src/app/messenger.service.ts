@@ -24,7 +24,7 @@ export class MessengerService {
     this.pullUser();
   }
 
-  requiresLogin = (target: MessengerService, propertyKey: string, descriptor: PropertyDescriptor) => {
+  static requiresLogin = (target: MessengerService, propertyKey: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
 
     descriptor.value = function (...args: any[]) {
@@ -33,7 +33,15 @@ export class MessengerService {
     }
 
     return descriptor;
-  } 
+  }
+
+  public requireUser(): User {
+    if (!this.loggedIn) {
+      throw Error("User is not logged in. WARNING: This error should not been raised. This error should have been guarded by the requiresLogin decorator.");
+    }
+
+    return <User>this._user;
+  }
 
   public checkLoggedIn() {
     if (!this.loggedIn) {
@@ -41,15 +49,14 @@ export class MessengerService {
     };
   }
 
-  public getMessages(): Message[] {
+  @MessengerService.requiresLogin public getMessages(): Message[] {
     return (<User>this._user).messages;
   }
 
-  public setUserPfpFromFile(file: File): void {
+  @MessengerService.requiresLogin public setUserPfpFromFile(file: File): void {
     const reader = new FileReader();
     reader.onloadend = () => {
-      if (this._user === null) { return; }
-      this._user.pfpDataURL = <string>reader.result;
+      (<User>this._user).pfpDataURL = <string>reader.result;
       this.pushUser();
     }; // cast result to string (because it is a data url) and set pfpDataURL
     reader.readAsDataURL(file); // read the image as a data url
@@ -68,8 +75,7 @@ export class MessengerService {
     this._user = this.getUser();
   }
 
-  private pushUser(): void {
-    if (this._user === null) { return; }
+  @MessengerService.requiresLogin private pushUser(): void {
     this.setUser(this._user);
   }
 
