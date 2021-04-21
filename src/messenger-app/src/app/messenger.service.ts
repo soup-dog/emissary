@@ -8,7 +8,7 @@ import { NormalEvent } from './normal-event';
 })
 export class MessengerService {
   public static readonly USER_STORAGE_KEY: string = "user";
-  public static readonly REGISTER_ROUTE: string = "app/register";
+  public static readonly REGISTER_ROUTE: string = "register";
   private _user: User | null = null;
   public userSet: NormalEvent<User> = new NormalEvent<User>();
 
@@ -24,36 +24,29 @@ export class MessengerService {
     this.pullUser();
   }
 
-  static requiresLoggedIn = (target: MessengerService, propertyKey: string, descriptor: PropertyDescriptor) => {
-    const originalMethod = descriptor.value;
-
-    descriptor.value = function (...args: any[]) {
-      target.checkLoggedIn();
-      originalMethod.apply(this, args);
+  public requireLoggedIn(): void {
+    if (!this.loggedIn) {
+      this.router.navigate([MessengerService.REGISTER_ROUTE]);
     }
-
-    return descriptor;
   }
 
   public requireUser(): User {
+    console.log(this._user);
+    console.log(this);
+    console.log(this.loggedIn);
+
     if (!this.loggedIn) {
-      throw Error("User is not logged in. WARNING: This error should not been raised, it should have been guarded by the requiresLoggedIn decorator.");
+      throw Error("User is not logged in.");
     }
 
     return <User>this._user;
   }
 
-  public checkLoggedIn() {
-    if (!this.loggedIn) {
-      this.router.navigate([MessengerService.REGISTER_ROUTE]);
-    };
-  }
-
-  @MessengerService.requiresLoggedIn public getMessages(): Message[] {
+  public getMessages(): Message[] {
     return this.requireUser().messages;
   }
 
-  @MessengerService.requiresLoggedIn public setUserPfpFromFile(file: File): void {
+  public setUserPfpFromFile(file: File): void {
     const reader = new FileReader();
     reader.onloadend = () => {
       this.requireUser().pfpDataURL = <string>reader.result;
@@ -75,7 +68,7 @@ export class MessengerService {
     this._user = this.getUser();
   }
 
-  @MessengerService.requiresLoggedIn private pushUser(): void {
+  private pushUser(): void {
     this.setUser(this.requireUser());
   }
 
