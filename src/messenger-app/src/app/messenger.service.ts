@@ -24,7 +24,7 @@ export class MessengerService {
     this.pullUser();
   }
 
-  static requiresLogin = (target: MessengerService, propertyKey: string, descriptor: PropertyDescriptor) => {
+  static requiresLoggedIn = (target: MessengerService, propertyKey: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
 
     descriptor.value = function (...args: any[]) {
@@ -37,7 +37,7 @@ export class MessengerService {
 
   public requireUser(): User {
     if (!this.loggedIn) {
-      throw Error("User is not logged in. WARNING: This error should not been raised. This error should have been guarded by the requiresLogin decorator.");
+      throw Error("User is not logged in. WARNING: This error should not been raised. This error should have been guarded by the requiresLoggedIn decorator.");
     }
 
     return <User>this._user;
@@ -49,11 +49,11 @@ export class MessengerService {
     };
   }
 
-  @MessengerService.requiresLogin public getMessages(): Message[] {
+  @MessengerService.requiresLoggedIn public getMessages(): Message[] {
     return (<User>this._user).messages;
   }
 
-  @MessengerService.requiresLogin public setUserPfpFromFile(file: File): void {
+  @MessengerService.requiresLoggedIn public setUserPfpFromFile(file: File): void {
     const reader = new FileReader();
     reader.onloadend = () => {
       (<User>this._user).pfpDataURL = <string>reader.result;
@@ -75,8 +75,8 @@ export class MessengerService {
     this._user = this.getUser();
   }
 
-  @MessengerService.requiresLogin private pushUser(): void {
-    this.setUser(this._user);
+  @MessengerService.requiresLoggedIn private pushUser(): void {
+    this.setUser(this.requireUser());
   }
 
   public getUser(): User {
