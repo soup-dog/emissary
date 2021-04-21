@@ -79,9 +79,9 @@ export class MessengerService {
     this.setUser(this.requireUser());
   }
 
-  public getUser(): User {
+  private getUser(): User | null {
     const data = sessionStorage.getItem(MessengerService.USER_STORAGE_KEY); // pull user from storage as a JSON string
-    if (data == null) { throw Error("No user at " + MessengerService.USER_STORAGE_KEY + "."); } // throw error if stored data is null
+    if (data == null) { return null; } // return null if stored data is null
     const user = User.loadFromJSON(data); // otherwise convert the JSON string to an instance of User
     return user;
   }
