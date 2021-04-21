@@ -18,7 +18,6 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log("submitted");
     this.messenger.register(this.registerForm.value["username"]);
   }
 }
