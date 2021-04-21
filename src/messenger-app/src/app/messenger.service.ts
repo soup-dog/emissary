@@ -9,6 +9,7 @@ import { NormalEvent } from './normal-event';
 export class MessengerService {
   public static readonly USER_STORAGE_KEY: string = "user";
   public static readonly REGISTER_ROUTE: string = "register";
+  public static readonly APP_ROUTE: string = "app";
   private _user: User | null = null;
   public userSet: NormalEvent<User> = new NormalEvent<User>();
 
@@ -58,6 +59,7 @@ export class MessengerService {
   public register(username: string) {
     this._user = new User(username);
     this.pushUser();
+    this.router.navigate([MessengerService.APP_ROUTE]);
   }
   
   public login() {
