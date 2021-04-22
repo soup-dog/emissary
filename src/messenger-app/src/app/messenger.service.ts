@@ -8,6 +8,8 @@ import { NormalEvent } from './normal-event';
 })
 export class MessengerService {
   public static readonly USER_STORAGE_KEY: string = "user";
+  public static readonly MESSAGES_STORAGE_KEY: string = "messages";
+  public static readonly USERS_STORAGE_KEY: string = "users";
   public static readonly REGISTER_ROUTE: string = "register";
   public static readonly APP_ROUTE: string = "app";
   private _user: User | null = null;
@@ -22,25 +24,22 @@ export class MessengerService {
   }
 
   constructor(private router: Router) {
-    this.pullUser();
+    this.pullUser(); // pull user from session storage if available
   }
 
   public requireLoggedIn(): void {
-    if (!this.loggedIn) {
-      this.router.navigate([MessengerService.REGISTER_ROUTE]);
+    if (!this.loggedIn) { // if not logged in
+      this.router.navigate([MessengerService.REGISTER_ROUTE]); // navigate to register page
     }
   }
 
   public requireUser(): User {
-    console.log(this._user);
-    console.log(this);
-    console.log(this.loggedIn);
-
+    // raise error if user is not logged in
     if (!this.loggedIn) {
       throw Error("User is not logged in.");
     }
 
-    return <User>this._user;
+    return <User>this._user; // cast user to User and return
   }
 
   public getMessages(): Message[] {
@@ -50,15 +49,15 @@ export class MessengerService {
   public setUserPfpFromFile(file: File): void {
     const reader = new FileReader();
     reader.onloadend = () => {
-      this.requireUser().pfpDataURL = <string>reader.result;
-      this.pushUser();
-    }; // cast result to string (because it is a data url) and set pfpDataURL
+      this.requireUser().pfpDataURL = <string>reader.result; // cast result to string (because it is a data url) and set pfpDataURL
+      this.pushUser(); // push updated user to session storage
+    };
     reader.readAsDataURL(file); // read the image as a data url
   }
 
   public register(username: string) {
-    this._user = new User(username);
-    this.pushUser();
+    this._user = new User(username); // create a new user with the given username
+    this.pushUser(); // 
     this.router.navigate([MessengerService.APP_ROUTE]);
   }
   
