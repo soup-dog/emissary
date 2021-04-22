@@ -76,7 +76,7 @@ export class MessengerService {
   private getUser(): User | null {
     const data = sessionStorage.getItem(MessengerService.USER_STORAGE_KEY); // pull user from storage as a JSON string
     if (data == null) { return null; } // return null if stored data is null
-    const user = User.loadFromJSON(data); // otherwise convert the JSON string to an instance of User
+    const user = User.fromJSON(data); // otherwise convert the JSON string to an instance of User
     return user;
   }
 

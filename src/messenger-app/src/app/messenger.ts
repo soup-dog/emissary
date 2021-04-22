@@ -9,7 +9,7 @@ export class User {
         this.messages = messages;
     }
 
-    public static loadFromJSON(json: string): User {
+    public static fromJSON(json: string): User {
         const jsonObject = JSON.parse(json);
         return new User(
             jsonObject.username,
