@@ -63,9 +63,9 @@ export class MessengerService {
 
   public async register(username: string): Promise<string> {
     this._session = new User(username); // create a new user with the given username and store it in session
-    this.pushSession(); // push user to session storage
     this._userKey = await UserKey.generate(); // generate new UserKey and store it in _userKey
-    return this._userKey.toDataURL(); // return key as a data url
+    this.pushSession(); // push user session to storage
+    return await this._userKey.toDataURL(); // return key as a data url
   }
   
   public login(username: string, keyFile: File) {
