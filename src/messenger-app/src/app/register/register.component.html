@@ -3,5 +3,14 @@
         Username: <input type="text" name="" id="" formControlName="username">
     </label>
     <!-- <input type="submit" value="" [disabled]="!registerForm.valid"> -->
-    <button type="submit" [disabled]="!registerForm.valid">submit</button>
+    <button type="submit" [disabled]="!registerForm.valid">Register</button>
 </form>
+<app-popup [shown]="shown">
+    <h1 class="popup-header">Registration successful!</h1>
+    <p>
+        Welcome to Emissary, {{ username }}! Here is a download link to your very own personal key. It is unique and the <b>only way to access your account</b>, so <b>don't lose it</b> and <b>never share it with anyone</b>.
+    </p>
+    <div class="button-container">
+        <a [href]="keyDataURL" [download]="username + '.key.json'" class="big-button">Download</a>
+    </div>
+</app-popup>
