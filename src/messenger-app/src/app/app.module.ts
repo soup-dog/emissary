@@ -12,6 +12,7 @@ import { RegisterComponent } from './register/register.component';
 import { MessengerComponent } from './messenger/messenger.component';
 import { LoginComponent } from './login/login.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
+import { PopupComponent } from './popup/popup.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { TopBarComponent } from './top-bar/top-bar.component';
     MessengerComponent,
     LoginComponent,
     TopBarComponent,
+    PopupComponent,
   ],
   imports: [
     BrowserModule,
