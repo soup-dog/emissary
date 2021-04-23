@@ -61,10 +61,11 @@ export class MessengerService {
     reader.readAsDataURL(file); // read the image as a data url
   }
 
-  public register(username: string) {
+  public async register(username: string): Promise<string> {
     this._session = new User(username); // create a new user with the given username and store it in session
     this.pushSession(); // push user to session storage
-    this.router.navigate([MessengerService.APP_ROUTE]);
+    this._userKey = await UserKey.generate(); // generate new UserKey and store it in _userKey
+    return this._userKey.toJSON(); // return exported userKey
   }
   
   public login(username: string, keyFile: File) {
