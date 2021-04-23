@@ -4,7 +4,7 @@ landing_dir_src = $(landing_dir)/src
 app_dir = src/messenger-app
 output_dir = dist
 app_output_dir = $(output_dir)/app
-app_routes = "app" "register" "account"
+app_routes = "app" "register" "account" "login"
 
 ifdef PROD
 	app_build_args = --prod
