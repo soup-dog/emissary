@@ -70,9 +70,10 @@ export class MessengerService {
   public login(username: string, keyFile: File) {
     const reader = new FileReader();
     reader.onloadend = () => {
-      reader.result = 
+      UserKey.fromJSON(<string>reader.result) // load key from file contents
+        .then((userKey) => this._userKey = userKey); // set _userKey to result
     }
-    reader.readAsArrayBuffer(keyFile);
+    reader.readAsText(keyFile);
   }
 
   /**
