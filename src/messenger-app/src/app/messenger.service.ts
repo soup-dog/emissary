@@ -7,11 +7,11 @@ import { NormalEvent } from './normal-event';
   providedIn: 'root'
 })
 export class MessengerService {
-  public static readonly USER_SESSION_STORAGE_KEY: string = "user";
-  public static readonly MESSAGES_STORAGE_KEY: string = "messages";
-  public static readonly USERS_STORAGE_KEY: string = "users";
-  public static readonly REGISTER_ROUTE: string = "register";
-  public static readonly APP_ROUTE: string = "app";
+  public static readonly USER_SESSION_STORAGE_KEY: string = 'user';
+  public static readonly MESSAGES_STORAGE_KEY: string = 'messages';
+  public static readonly USERS_STORAGE_KEY: string = 'users';
+  public static readonly REGISTER_ROUTE: string = 'register';
+  public static readonly APP_ROUTE: string = 'app';
   private _session: User | null = null;
   private _users: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>();
   private _userKey: UserKey | null = null;
@@ -38,7 +38,7 @@ export class MessengerService {
   public requireSession(): User {
     // raise error if user is not logged in
     if (!this.loggedIn) {
-      throw Error("User is not logged in.");
+      throw Error('User is not logged in.');
     }
 
     return <User>this._session; // cast user to User and return
