@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { User, Message } from './messenger';
+import { User, Message, UserKey } from './messenger';
 import { NormalEvent } from './normal-event';
 
 @Injectable({
@@ -13,6 +13,8 @@ export class MessengerService {
   public static readonly REGISTER_ROUTE: string = "register";
   public static readonly APP_ROUTE: string = "app";
   private _user: User | null = null;
+  private _users: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>();
+  private _userKey: UserKey | null = null;
   public userSet: NormalEvent<User> = new NormalEvent<User>();
 
   public get storedUserAvailable(): boolean {
@@ -57,12 +59,16 @@ export class MessengerService {
 
   public register(username: string) {
     this._user = new User(username); // create a new user with the given username
-    this.pushUser(); // 
+    this.pushUser(); // push user to session storage
     this.router.navigate([MessengerService.APP_ROUTE]);
   }
   
-  public login() {
-    
+  public login(username: string, keyFile: File) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      reader.result()
+    }
+    reader.readAsArrayBuffer(keyFile);
   }
 
   private pullUser(): void {
@@ -71,6 +77,31 @@ export class MessengerService {
 
   private pushUser(): void {
     this.setUser(this.requireUser());
+    // cast _userKey to UserKey because _userKey should be set if requireUser() passed and encrypt user
+    (<UserKey>this._userKey).encrypt(this.requireUser())
+      .then((ciphertext) => {
+        this._users.set(this.requireUser().username, ciphertext); // update users with ciphertext
+        this.pushUsers(); // push users to local storage
+      });
+  }
+
+  private pullUsers(): void {
+    const data = localStorage.getItem(MessengerService.USERS_STORAGE_KEY); // pull users json string from storage
+    this._users = new Map<string, ArrayBuffer>(); // create new map
+    if (data == null) { // no map exists
+      return;
+    }
+
+    const jsonObject = JSON.parse(data); // parse the data into an object
+
+    Object.entries(jsonObject) // get key value pairs
+      .forEach(([key, value]) => { this._users.set(key, <ArrayBuffer>value) }) // for each pair set pair in map
+  }
+
+  private pushUsers(): void {
+    const dictionary: any = {}; // create new empty object
+    this._users.forEach((value, key) => { dictionary[key] = value; }); // for each value key pair in _users set the corresponding pair in the dictionary
+    localStorage.setItem(MessengerService.USERS_STORAGE_KEY, JSON.stringify(dictionary));
   }
 
   private getUser(): User | null {
