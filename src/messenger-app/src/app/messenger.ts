@@ -81,6 +81,15 @@ export class UserKey {
 
         return JSON.stringify(jsonObject);
     }
+
+    public async toDataURL(): Promise<string> {
+        const blob = new Blob([await this.toJSON()]); // create new blob from this as a JSON string
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(<string>reader.result); // resolve promise with result when onloadend
+            reader.readAsDataURL(blob); // read blob as data url
+        });
+    }
 }
 
 export class UserInfo {
