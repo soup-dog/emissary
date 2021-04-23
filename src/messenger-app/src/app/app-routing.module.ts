@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AccountComponent } from './account/account.component';
-import { AppComponent } from './app.component';
 import { MessengerComponent } from './messenger/messenger.component';
 import { RegisterComponent } from './register/register.component';
 
