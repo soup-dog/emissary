@@ -7,26 +7,26 @@ import { NormalEvent } from './normal-event';
   providedIn: 'root'
 })
 export class MessengerService {
-  public static readonly USER_STORAGE_KEY: string = "user";
+  public static readonly USER_SESSION_STORAGE_KEY: string = "user";
   public static readonly MESSAGES_STORAGE_KEY: string = "messages";
   public static readonly USERS_STORAGE_KEY: string = "users";
   public static readonly REGISTER_ROUTE: string = "register";
   public static readonly APP_ROUTE: string = "app";
-  private _user: User | null = null;
+  private _session: User | null = null;
   private _users: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>();
   private _userKey: UserKey | null = null;
   public userSet: NormalEvent<User> = new NormalEvent<User>();
 
-  public get storedUserAvailable(): boolean {
-    return sessionStorage.getItem(MessengerService.USER_STORAGE_KEY) != null;
+  public get sessionAvailable(): boolean {
+    return sessionStorage.getItem(MessengerService.USER_SESSION_STORAGE_KEY) != null;
   }
 
   public get loggedIn() {
-    return this._user !== null;
+    return this._session !== null;
   }
 
   constructor(private router: Router) {
-    this.pullUser(); // pull user from session storage if available
+    this.pullSession(); // pull session from session storage if available
   }
 
   public requireLoggedIn(): void {
@@ -35,13 +35,13 @@ export class MessengerService {
     }
   }
 
-  public requireUser(): User {
+  public requireSession(): User {
     // raise error if user is not logged in
     if (!this.loggedIn) {
       throw Error("User is not logged in.");
     }
 
-    return <User>this._user; // cast user to User and return
+    return <User>this._session; // cast user to User and return
   }
 
   /**
@@ -49,21 +49,21 @@ export class MessengerService {
    * @returns the messages of the logged in user.
    */
   public getMessages(): Message[] {
-    return this.requireUser().messages;
+    return this.requireSession().messages;
   }
 
   public setUserPfpFromFile(file: File): void {
     const reader = new FileReader();
     reader.onloadend = () => {
-      this.requireUser().pfpDataURL = <string>reader.result; // cast result to string (because it is a data url) and set pfpDataURL
-      this.pushUser(); // push updated user to session storage
+      this.requireSession().pfpDataURL = <string>reader.result; // cast result to string (because it is a data url) and set pfpDataURL
+      this.pushSession(); // push updated user to session storage
     };
     reader.readAsDataURL(file); // read the image as a data url
   }
 
   public register(username: string) {
-    this._user = new User(username); // create a new user with the given username
-    this.pushUser(); // push user to session storage
+    this._session = new User(username); // create a new user with the given username and store it in session
+    this.pushSession(); // push user to session storage
     this.router.navigate([MessengerService.APP_ROUTE]);
   }
   
@@ -76,21 +76,21 @@ export class MessengerService {
   }
 
   /**
-   * Pulls the user from session storage.
+   * Pulls the session from session storage.
    */
-  private pullUser(): void {
-    this._user = this.getUser();
+  private pullSession(): void {
+    this._session = this.getSession();
   }
 
   /**
    * Pushes the current user to the users map and to session storage.
    */
-  private pushUser(): void {
-    this.setUser(this.requireUser());
+  private pushSession(): void {
+    this.setSession(this.requireSession());
     // cast _userKey to UserKey because _userKey should be set if requireUser() passed and encrypt user
-    (<UserKey>this._userKey).encrypt(this.requireUser())
+    (<UserKey>this._userKey).encrypt(this.requireSession())
       .then((ciphertext) => {
-        this._users.set(this.requireUser().username, ciphertext); // update users with ciphertext
+        this._users.set(this.requireSession().username, ciphertext); // update users with ciphertext
         this.pushUsers(); // push users to local storage
       });
   }
@@ -121,15 +121,15 @@ export class MessengerService {
     localStorage.setItem(MessengerService.USERS_STORAGE_KEY, JSON.stringify(dictionary));
   }
 
-  private getUser(): User | null {
-    const data = sessionStorage.getItem(MessengerService.USER_STORAGE_KEY); // pull user from storage as a JSON string
+  private getSession(): User | null {
+    const data = sessionStorage.getItem(MessengerService.USER_SESSION_STORAGE_KEY); // pull user from storage as a JSON string
     if (data == null) { return null; } // return null if stored data is null
     const user = User.fromJSON(data); // otherwise convert the JSON string to an instance of User
     return user;
   }
 
-  private setUser(user: User) {
-    sessionStorage.setItem(MessengerService.USER_STORAGE_KEY, JSON.stringify(user)); // set user in session storage
+  private setSession(user: User) {
+    sessionStorage.setItem(MessengerService.USER_SESSION_STORAGE_KEY, JSON.stringify(user)); // set user in session storage
     this.userSet.dispatch(user); // dispatch event
   }
 }
