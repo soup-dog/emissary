@@ -44,6 +44,10 @@ export class MessengerService {
     return <User>this._user; // cast user to User and return
   }
 
+  /**
+   * 
+   * @returns the messages of the logged in user.
+   */
   public getMessages(): Message[] {
     return this.requireUser().messages;
   }
@@ -66,15 +70,21 @@ export class MessengerService {
   public login(username: string, keyFile: File) {
     const reader = new FileReader();
     reader.onloadend = () => {
-      reader.result()
+      reader.result = 
     }
     reader.readAsArrayBuffer(keyFile);
   }
 
+  /**
+   * Pulls the user from session storage.
+   */
   private pullUser(): void {
     this._user = this.getUser();
   }
 
+  /**
+   * Pushes the current user to the users map and to session storage.
+   */
   private pushUser(): void {
     this.setUser(this.requireUser());
     // cast _userKey to UserKey because _userKey should be set if requireUser() passed and encrypt user
@@ -85,6 +95,10 @@ export class MessengerService {
       });
   }
 
+  /**
+   * Pulls users map from local storage.
+   * @returns 
+   */
   private pullUsers(): void {
     const data = localStorage.getItem(MessengerService.USERS_STORAGE_KEY); // pull users json string from storage
     this._users = new Map<string, ArrayBuffer>(); // create new map
@@ -98,6 +112,9 @@ export class MessengerService {
       .forEach(([key, value]) => { this._users.set(key, <ArrayBuffer>value) }) // for each pair set pair in map
   }
 
+  /**
+   * Pushes users map to local storage.
+   */
   private pushUsers(): void {
     const dictionary: any = {}; // create new empty object
     this._users.forEach((value, key) => { dictionary[key] = value; }); // for each value key pair in _users set the corresponding pair in the dictionary
