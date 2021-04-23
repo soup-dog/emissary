@@ -49,6 +49,31 @@ export class UserKey {
 
         return User.fromJSON(decoder.decode(await window.crypto.subtle.decrypt(this.encryptionAlgorithm, this.cryptoKey, buffer)))
     }
+
+    public static async generate(): Promise<UserKey> {
+        return new UserKey(
+            await window.crypto.subtle.generateKey(UserKey.keyGenAlgorithm, true, ["encrypt", "decrypt"]), // generate an extractable key
+            window.crypto.getRandomValues(new Uint8Array(16)) // generate cryptographically random initialisation vector
+        );
+    }
+
+    public static async fromJSON(json: string): Promise<UserKey> {
+        const jsonObject = JSON.parse(json);
+        return new UserKey(
+            // import non-extractable key from json web key
+            await window.crypto.subtle.importKey("jwk", jsonObject.cryptoKey, UserKey.keyGenAlgorithm, false, ["encrypt", "decrypt"]),
+            jsonObject.iv
+        );
+    }
+
+    public async toJSON(): Promise<string> {
+        const jsonObject = {
+            cryptoKey: await window.crypto.subtle.exportKey("jwk", this.cryptoKey), // export key as a json web key
+            iv: this.encryptionAlgorithm.iv
+        };
+
+        return JSON.stringify(jsonObject);
+    }
 }
 
 export class UserInfo {
