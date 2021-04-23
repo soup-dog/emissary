@@ -16,6 +16,6 @@ export class SmallProfileComponent implements OnInit {
   }
 
   public requireUser(): User {
-    return this.messenger.requireUser();
+    return this.messenger.requireSession();
   }
 }
