@@ -20,6 +20,13 @@ export class User {
             jsonObject.routes
         );
     }
+
+    public toUserInfo(): UserInfo {
+        return new UserInfo(
+            this.username,
+            this.pfpDataURL
+        );
+    }
 }
 
 export class UserKey {
