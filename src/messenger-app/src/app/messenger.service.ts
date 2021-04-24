@@ -1,7 +1,7 @@
 import { ThrowStmt } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { User, Message, UserKey, Route } from './messenger';
+import { User, Message, UserKey, Route, UserInfo } from './messenger';
 import { NormalEvent } from './normal-event';
 import { defaultPfp } from '../assets/defaultPfp';
 
@@ -44,6 +44,10 @@ export class MessengerService {
     }
 
     return <User>this._session; // cast user to User and return
+  }
+
+  public requireUserInfo(): UserInfo {
+    return this.requireSession().toUserInfo();
   }
 
   /**
