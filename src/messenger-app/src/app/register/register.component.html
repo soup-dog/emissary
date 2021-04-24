@@ -11,6 +11,10 @@
         Welcome to Emissary, {{ username }}! Here is a download link to your very own personal key. It is unique and the <b>only way to access your account</b>, so <b>don't lose it</b> and <b>never share it with anyone</b>.
     </p>
     <div class="button-container">
-        <a [href]="keyDataURL" [download]="username + '.key.json'" class="big-button">Download</a>
+        <a [href]="keyDataURL" [download]="username + '.key.json'" class="big-button" (click)="this.downloaded = true">Download</a>
+    </div>
+
+    <div class="button-container">
+        <a routerLink="/app" class="big-button" [ngClass]="{'disabled': !downloaded}">Continue</a>
     </div>
 </app-popup>

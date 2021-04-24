@@ -16,6 +16,7 @@ export class RegisterComponent implements OnInit {
   username: string = "";
   shown: boolean = false;
   keyDataURL: SafeUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // rickroll anyone who tries to download the key file before registering
+  downloaded: boolean = false;
 
   constructor(private messenger: MessengerService, private sanitiser: DomSanitizer, private router: Router) { }
 
