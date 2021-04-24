@@ -1,0 +1,17 @@
+.route-list-container {
+    display: flex;
+    width: 100%;
+}
+
+.container {
+    height: 95vh;
+    border: 1px solid grey;
+}
+
+app-route-list {
+    flex-grow: 1;
+}
+
+app-message-list {
+    flex-grow: 2;
+}
