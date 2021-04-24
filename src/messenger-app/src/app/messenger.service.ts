@@ -1,7 +1,9 @@
+import { ThrowStmt } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, Message, UserKey } from './messenger';
 import { NormalEvent } from './normal-event';
+import { defaultPfp } from '../assets/defaultPfp';
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +65,7 @@ export class MessengerService {
 
   public async register(username: string): Promise<string> {
     this._session = new User(username); // create a new user with the given username and store it in session
+    this._session.pfpDataURL = defaultPfp; // set pfp to default pfp
     this._userKey = await UserKey.generate(); // generate new UserKey and store it in _userKey
     this.pushSession(); // push user session to storage
     return await this._userKey.toDataURL(); // return key as a data url
