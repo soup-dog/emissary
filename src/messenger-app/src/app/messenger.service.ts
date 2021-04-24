@@ -1,7 +1,7 @@
 import { ThrowStmt } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { User, Message, UserKey } from './messenger';
+import { User, Message, UserKey, Route } from './messenger';
 import { NormalEvent } from './normal-event';
 import { defaultPfp } from '../assets/defaultPfp';
 
@@ -52,6 +52,10 @@ export class MessengerService {
    */
   public getMessages(): Message[] {
     return this.requireSession().messages;
+  }
+
+  public getRoutes(): Route[] {
+    return this.requireSession().routes;
   }
 
   public setUserPfpFromFile(file: File): void {
