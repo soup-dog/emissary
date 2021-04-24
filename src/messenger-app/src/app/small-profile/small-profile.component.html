@@ -1,4 +1,6 @@
-<img [src]="requireUser().pfpDataURL" alt="">
+<a routerLink="/account">
+    <img [src]="requireUser().pfpDataURL" alt="Profile picture" class="profile-picture">
+</a>
 <a routerLink="/account">
     <p>{{ requireUser().username }}</p>
 </a>
