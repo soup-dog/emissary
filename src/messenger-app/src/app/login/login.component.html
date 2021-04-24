@@ -1,1 +1,9 @@
-<p>login works!</p>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <label for="">
+        Username: <input type="text" name="" id="" formControlName="username">
+    </label>
+    <label for="">
+        Key File: <input type="file" name="" id="" formControlName="keyFile">
+    </label>
+    <button type="submit" [disabled]="!loginForm.valid">Login</button>
+</form>

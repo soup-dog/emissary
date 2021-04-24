@@ -28,6 +28,7 @@ export class MessengerService {
   }
 
   constructor(private router: Router) {
+    this.pullUsers(); // pull users from local storage
     this.pullSession(); // pull session from session storage if available
   }
 
@@ -83,12 +84,16 @@ export class MessengerService {
     const reader = new FileReader();
     reader.onloadend = () => {
       UserKey.fromJSON(JSON.parse(<string>reader.result)) // load key from file contents
-        .then((userKey) => {
+        .then((userKey: UserKey) => {
           this._userKey = userKey; // set _userKey to result
-          const ciphertext = this._users.get("username"); // get ciphertext from users
-          console.log(userKey.decrypt(<ArrayBuffer>ciphertext)); // cast to arraybuffer and decrypt
-          // this.router.navigate([MessengerService.APP_ROUTE]);
-        }); 
+          const ciphertext = this._users.get(username); // get ciphertext from users
+          return userKey.decrypt(<ArrayBuffer>ciphertext); // cast to arraybuffer and decrypt
+        })
+        .then((user: User) => {
+          this._session = user;
+          this.pushSession();
+          this.router.navigate([MessengerService.APP_ROUTE]);
+        });
     }
     reader.readAsText(keyFile);
   }
@@ -125,10 +130,9 @@ export class MessengerService {
     }
 
     const jsonObject = JSON.parse(data); // parse the data into an object
-    const encoder = new TextEncoder();
 
     Object.entries(jsonObject) // get key value pairs
-      .forEach(([key, value]) => { this._users.set(key, encoder.encode(<string>value).buffer) }) // for each pair set pair in map 
+      .forEach(([key, value]) => { this._users.set(key, new Uint8Array(<any>value).buffer) }) // for each pair set pair in map 
   }
 
   /**
@@ -137,7 +141,7 @@ export class MessengerService {
   private pushUsers(): void {
     const dictionary: any = {}; // create new empty object
     const decoder = new TextDecoder();
-    this._users.forEach((value, key) => { dictionary[key] = decoder.decode(value) }); // for each value key pair in _users set the corresponding pair in the dictionary and convert the value to a uint8array so that it can be converted to json
+    this._users.forEach((value, key) => { dictionary[key] = Array.from(new Uint8Array(value)) }); // for each value key pair in _users set the corresponding pair in the dictionary and convert the value to a uint8array so that it can be converted to json
     localStorage.setItem(MessengerService.USERS_STORAGE_KEY, JSON.stringify(dictionary));
   }
 

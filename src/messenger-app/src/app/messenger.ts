@@ -20,8 +20,6 @@ export class User {
         );
     }
 
-    public beep = () => JSON.stringify(this);
-
     public toUserInfo(): UserInfo {
         return new UserInfo(
             this.username,
@@ -55,7 +53,7 @@ export class UserKey {
     public async decrypt(buffer: ArrayBuffer): Promise<User> {
         const decoder = new TextDecoder();
 
-        return User.fromJSON(decoder.decode(await window.crypto.subtle.decrypt(this.encryptionAlgorithm, this.cryptoKey, buffer)))
+        return User.fromJSON(JSON.parse(decoder.decode(await window.crypto.subtle.decrypt(this.encryptionAlgorithm, this.cryptoKey, buffer))))
     }
 
     public static async generate(): Promise<UserKey> {
@@ -69,14 +67,14 @@ export class UserKey {
         return new UserKey(
             // import non-extractable key from json web key
             await window.crypto.subtle.importKey("jwk", jsonObject.cryptoKey, UserKey.keyGenAlgorithm, false, ["encrypt", "decrypt"]),
-            jsonObject.iv
+            new Uint8Array(jsonObject.iv)
         );
     }
 
     public async toJSON(): Promise<string> {
         const jsonObject = {
             cryptoKey: await window.crypto.subtle.exportKey("jwk", this.cryptoKey), // export key as a json web key
-            iv: this.encryptionAlgorithm.iv
+            iv: Array.from(this.encryptionAlgorithm.iv)
         };
 
         return JSON.stringify(jsonObject);
