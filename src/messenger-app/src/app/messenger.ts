@@ -11,15 +11,16 @@ export class User {
         this.routes = routes;
     }
 
-    public static fromJSON(json: string): User {
-        const jsonObject = JSON.parse(json);
+    public static fromJSON(jsonObject: any): User {
         return new User(
             jsonObject.username,
             jsonObject.pfpDataURL,
-            jsonObject.messages,
-            jsonObject.routes
+            jsonObject.messages.map((message: any) => Message.fromJSON(message)),
+            jsonObject.routes.map((route: any) => Route.fromJSON(route))
         );
     }
+
+    public beep = () => JSON.stringify(this);
 
     public toUserInfo(): UserInfo {
         return new UserInfo(
@@ -64,8 +65,7 @@ export class UserKey {
         );
     }
 
-    public static async fromJSON(json: string): Promise<UserKey> {
-        const jsonObject = JSON.parse(json);
+    public static async fromJSON(jsonObject: any): Promise<UserKey> {
         return new UserKey(
             // import non-extractable key from json web key
             await window.crypto.subtle.importKey("jwk", jsonObject.cryptoKey, UserKey.keyGenAlgorithm, false, ["encrypt", "decrypt"]),
@@ -101,13 +101,14 @@ export class UserInfo {
         this.pfpDataURL = pfpDataURL;
     }
 
-    public static fromJSON(json: string): UserInfo {
-        const jsonObject = JSON.parse(json);
+    public static fromJSON(jsonObject: any): UserInfo {
         return new UserInfo(
             jsonObject.username,
             jsonObject.pfpDataURL
         );
     }
+
+    public toJSON = () => JSON.stringify(this);
 }
 
 export class Route {
@@ -117,12 +118,13 @@ export class Route {
         this.userInfo = userInfo;
     }
 
-    public static fromJSON(json: string): Route {
-        const jsonObject = JSON.parse(json);
+    public static fromJSON(jsonObject: any): Route {
         return new Route(
             UserInfo.fromJSON(jsonObject.userInfo)
         );
     }
+
+    public toJSON = () => JSON.stringify(this);
 }
 
 export class Message {
@@ -134,11 +136,12 @@ export class Message {
         this.author = author;
     }
 
-    public static fromJSON(json: string): Message {
-        const jsonObject = JSON.parse(json);
+    public static fromJSON(jsonObject: any): Message {
         return new Message(
             jsonObject.content,
             UserInfo.fromJSON(jsonObject.author)
         );
     }
+
+    public toJSON = () => JSON.stringify(this);
 }
