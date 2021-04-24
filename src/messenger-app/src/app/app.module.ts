@@ -13,6 +13,7 @@ import { MessengerComponent } from './messenger/messenger.component';
 import { LoginComponent } from './login/login.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { PopupComponent } from './popup/popup.component';
+import { RouteListComponent } from './route-list/route-list.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { PopupComponent } from './popup/popup.component';
     LoginComponent,
     TopBarComponent,
     PopupComponent,
+    RouteListComponent,
   ],
   imports: [
     BrowserModule,
