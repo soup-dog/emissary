@@ -2,7 +2,6 @@ import { ThrowStmt } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, Message, AESCBCKey, Route, UserInfo } from './messenger';
-import { NormalEvent } from './normal-event';
 
 const defaultPfp = require('!!raw-loader?!../assets/defaultPfp.txt').default;
 
@@ -19,7 +18,6 @@ export class MessengerService {
   private _session: User | null = null;
   private _users: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>();
   private _userKey: AESCBCKey | null = null;
-  public userSet: NormalEvent<User> = new NormalEvent<User>();
 
   public get sessionAvailable(): boolean {
     return sessionStorage.getItem(MessengerService.USER_SESSION_STORAGE_KEY) != null;
@@ -170,6 +168,5 @@ export class MessengerService {
 
   private setSession(user: User) {
     sessionStorage.setItem(MessengerService.USER_SESSION_STORAGE_KEY, JSON.stringify(user)); // set user in session storage
-    this.userSet.dispatch(user); // dispatch event
   }
 }
