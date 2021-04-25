@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
   }
   
-  public requireUser = this.messenger.requireSession;
+  public requireUser = this.messenger.requireSession.bind(this.messenger);
 
   onSubmit(): void {
     this.messenger.register(this.registerForm.value["username"])
