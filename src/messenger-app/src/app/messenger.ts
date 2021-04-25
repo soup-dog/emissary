@@ -118,8 +118,6 @@ export class UserInfo {
             jsonObject.pfpDataURL
         );
     }
-
-    public toJSON = () => JSON.stringify(this);
 }
 
 export class Route {
@@ -148,8 +146,6 @@ export class Route {
             jsonObject.routeOwned
         );
     }
-
-    public toJSON = () => JSON.stringify(this);
 }
 
 export class Message {
@@ -170,6 +166,4 @@ export class Message {
             jsonObject.sentByRouteOwner
         );
     }
-
-    public toJSON = () => JSON.stringify(this);
 }
