@@ -74,6 +74,13 @@ export class MessengerService {
     reader.readAsDataURL(file); // read the image as a data url
   }
 
+  public async generateRoute(): Promise<Route> {
+    const route = await Route.generate(); // generate new route
+    this.requireSession().routes.push(route); // add it to the user's routes
+    this.pushSession(); // push the user session to storage
+    return route;
+  }
+
   public async register(username: string): Promise<string> {
     this._session = new User(username); // create a new user with the given username and store it in session
     this._session.pfpDataURL = defaultPfp; // set pfp to default pfp
