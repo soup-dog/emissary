@@ -1,10 +1,10 @@
 import { ThrowStmt } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { User, Message, UserKey, Route, UserInfo } from './messenger';
+import { User, Message, AESCBCKey, Route, UserInfo } from './messenger';
 import { NormalEvent } from './normal-event';
 
-const defaultPfp = require('!!raw-loader?!../assets/defaultPfp.txt') as string;
+const defaultPfp = require('!!raw-loader?!../assets/defaultPfp.txt').default;
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class MessengerService {
   public static readonly APP_ROUTE: string = 'app';
   private _session: User | null = null;
   private _users: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>();
-  private _userKey: UserKey | null = null;
+  private _userKey: AESCBCKey | null = null;
   public userSet: NormalEvent<User> = new NormalEvent<User>();
 
   public get sessionAvailable(): boolean {
@@ -76,7 +76,7 @@ export class MessengerService {
   public async register(username: string): Promise<string> {
     this._session = new User(username); // create a new user with the given username and store it in session
     this._session.pfpDataURL = defaultPfp; // set pfp to default pfp
-    this._userKey = await UserKey.generate(); // generate new UserKey and store it in _userKey
+    this._userKey = await AESCBCKey.generate(); // generate new UserKey and store it in _userKey
     this.pushSession(); // push user session to storage
     return await this._userKey.toDataURL(); // return key as a data url
   }
@@ -84,14 +84,14 @@ export class MessengerService {
   public login(username: string, keyFile: File) {
     const reader = new FileReader();
     reader.onloadend = () => {
-      UserKey.fromJSON(JSON.parse(<string>reader.result)) // load key from file contents
-        .then((userKey: UserKey) => {
+      AESCBCKey.fromJSON(JSON.parse(<string>reader.result)) // load key from file contents
+        .then(userKey => {
           this._userKey = userKey; // set _userKey to result
           const ciphertext = this._users.get(username); // get ciphertext from users
           return userKey.decrypt(<ArrayBuffer>ciphertext); // cast to arraybuffer and decrypt
         })
-        .then((user: User) => {
-          this._session = user;
+        .then(buffer => {
+          this._session = User.fromJSON(JSON.parse(new TextDecoder().decode(buffer)));
           this.pushSession();
           this.router.navigate([MessengerService.APP_ROUTE]);
         });
@@ -111,8 +111,8 @@ export class MessengerService {
    */
   private pushSession(): void {
     this.setSession(this.requireSession());
-    // cast _userKey to UserKey because _userKey should be set if requireUser() passed and encrypt user
-    (<UserKey>this._userKey).encrypt(this.requireSession())
+    // cast _userKey to AESCBCKey because _userKey should be set if requireUser() passed and encrypt user
+    (<AESCBCKey>this._userKey).encrypt(new TextEncoder().encode(JSON.stringify(this.requireSession())))
       .then((ciphertext) => {
         this._users.set(this.requireSession().username, ciphertext); // update users with ciphertext
         this.pushUsers(); // push users to local storage

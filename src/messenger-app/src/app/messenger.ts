@@ -1,3 +1,6 @@
+import { IvyParser } from "@angular/compiler";
+import { decodeFromWords, encodeToWords } from "./word-encode";
+
 export class User {
     public username: string;
     public pfpDataURL: string;
@@ -28,11 +31,12 @@ export class User {
     }
 }
 
-export class UserKey {
+export class AESCBCKey {
     public static readonly keyGenAlgorithm = {
         name: 'AES-CBC', // aes in cipher block chaining mode
         length: 128 // 128 bit key
     };
+    public static readonly IV_LENGTH = 16;
     encryptionAlgorithm: any;
     cryptoKey: CryptoKey;
 
@@ -44,29 +48,25 @@ export class UserKey {
         };
     }
 
-    public async encrypt(user: User): Promise<ArrayBuffer> {
-        const encoder = new TextEncoder();
-
-        return await window.crypto.subtle.encrypt(this.encryptionAlgorithm, this.cryptoKey, encoder.encode(JSON.stringify(user)));
+    public async encrypt(plain: ArrayBuffer): Promise<ArrayBuffer> {
+        return await window.crypto.subtle.encrypt(this.encryptionAlgorithm, this.cryptoKey, plain);
     }
     
-    public async decrypt(buffer: ArrayBuffer): Promise<User> {
-        const decoder = new TextDecoder();
-
-        return User.fromJSON(JSON.parse(decoder.decode(await window.crypto.subtle.decrypt(this.encryptionAlgorithm, this.cryptoKey, buffer))))
+    public async decrypt(buffer: ArrayBuffer): Promise<ArrayBuffer> {
+        return await window.crypto.subtle.decrypt(this.encryptionAlgorithm, this.cryptoKey, buffer);
     }
 
-    public static async generate(): Promise<UserKey> {
-        return new UserKey(
-            await window.crypto.subtle.generateKey(UserKey.keyGenAlgorithm, true, ["encrypt", "decrypt"]), // generate an extractable key
-            window.crypto.getRandomValues(new Uint8Array(16)) // generate cryptographically random initialisation vector
+    public static async generate(): Promise<AESCBCKey> {
+        return new AESCBCKey(
+            await window.crypto.subtle.generateKey(AESCBCKey.keyGenAlgorithm, true, ["encrypt", "decrypt"]), // generate an extractable key
+            window.crypto.getRandomValues(new Uint8Array(AESCBCKey.IV_LENGTH)) // generate cryptographically random initialisation vector
         );
     }
 
-    public static async fromJSON(jsonObject: any): Promise<UserKey> {
-        return new UserKey(
+    public static async fromJSON(jsonObject: any): Promise<AESCBCKey> {
+        return new AESCBCKey(
             // import non-extractable key from json web key
-            await window.crypto.subtle.importKey("jwk", jsonObject.cryptoKey, UserKey.keyGenAlgorithm, false, ["encrypt", "decrypt"]),
+            await window.crypto.subtle.importKey("jwk", jsonObject.cryptoKey, AESCBCKey.keyGenAlgorithm, false, ["encrypt", "decrypt"]),
             new Uint8Array(jsonObject.iv)
         );
     }
@@ -78,6 +78,19 @@ export class UserKey {
         };
 
         return JSON.stringify(jsonObject);
+    }
+
+    public async toWords(): Promise<string[]> {
+        return encodeToWords(await window.crypto.subtle.exportKey("raw", this.cryptoKey)
+         + this.encryptionAlgorithm.iv);
+    }
+
+    public static async fromWords(words: string[]): Promise<AESCBCKey> {
+        const fullKey = new Uint8Array(decodeFromWords(words));
+        return new AESCBCKey(
+            await window.crypto.subtle.importKey("raw", fullKey.slice(0, AESCBCKey.keyGenAlgorithm.length), AESCBCKey.keyGenAlgorithm, false, ["encrypt", "decrypt"]),
+            fullKey.slice(AESCBCKey.keyGenAlgorithm.length, AESCBCKey.keyGenAlgorithm.length + AESCBCKey.IV_LENGTH)
+        );
     }
 
     public async toDataURL(): Promise<string> {
