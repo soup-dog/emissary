@@ -125,16 +125,19 @@ export class UserInfo {
 export class Route {
     public userInfo: UserInfo;
     public key: AESCBCKey;
+    public routeOwned: boolean;
 
-    public constructor(userInfo: UserInfo, key: AESCBCKey) {
+    public constructor(userInfo: UserInfo, key: AESCBCKey, routeOwned: boolean) {
         this.userInfo = userInfo;
         this.key = key;
+        this.routeOwned = routeOwned;
     }
 
     public static async fromJSON(jsonObject: any): Promise<Route> {
         return new Route(
             UserInfo.fromJSON(jsonObject.userInfo),
-            await AESCBCKey.fromJSON(jsonObject.key)
+            await AESCBCKey.fromJSON(jsonObject.key),
+            jsonObject.routeOwned
         );
     }
 
@@ -144,16 +147,19 @@ export class Route {
 export class Message {
     author: UserInfo;
     content: string;
+    sentByRouteOwner: boolean;
 
-    constructor(content: string, author: UserInfo) {
+    constructor(content: string, author: UserInfo, sentByRouteOwner: boolean) {
         this.content = content;
         this.author = author;
+        this.sentByRouteOwner = sentByRouteOwner;
     }
 
     public static fromJSON(jsonObject: any): Message {
         return new Message(
             jsonObject.content,
-            UserInfo.fromJSON(jsonObject.author)
+            UserInfo.fromJSON(jsonObject.author),
+            jsonObject.sentByRouteOwner
         );
     }
 
