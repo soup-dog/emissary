@@ -124,14 +124,17 @@ export class UserInfo {
 
 export class Route {
     public userInfo: UserInfo;
+    public key: AESCBCKey;
 
-    public constructor(userInfo: UserInfo) {
+    public constructor(userInfo: UserInfo, key: AESCBCKey) {
         this.userInfo = userInfo;
+        this.key = key;
     }
 
-    public static fromJSON(jsonObject: any): Route {
+    public static async fromJSON(jsonObject: any): Promise<Route> {
         return new Route(
-            UserInfo.fromJSON(jsonObject.userInfo)
+            UserInfo.fromJSON(jsonObject.userInfo),
+            await AESCBCKey.fromJSON(jsonObject.key)
         );
     }
 
