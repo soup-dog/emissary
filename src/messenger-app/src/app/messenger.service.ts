@@ -15,6 +15,7 @@ export class MessengerService {
   public static readonly USERS_STORAGE_KEY: string = 'users';
   public static readonly REGISTER_ROUTE: string = 'register';
   public static readonly APP_ROUTE: string = 'app';
+  public static readonly LANDING_HOME_URL: string = 'home';
   private _session: User | null = null;
   private _users: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>();
   private _userKey: AESCBCKey | null = null;
@@ -97,6 +98,13 @@ export class MessengerService {
         });
     }
     reader.readAsText(keyFile);
+  }
+
+  public logout() {
+    this.pushSession(); // push session to storage
+    this._session = null; // set session to null
+    sessionStorage.removeItem(MessengerService.USER_SESSION_STORAGE_KEY); // clear user session from session storage
+    window.location.pathname = MessengerService.LANDING_HOME_URL; // navigate out of app to home url
   }
 
   /**
