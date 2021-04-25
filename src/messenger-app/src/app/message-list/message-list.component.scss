@@ -25,3 +25,10 @@
 .message-list-item :last-child {
     flex-grow: 10;
 }
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 5%;
+    padding-right: 5%;
+}
