@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, Message, UserKey, Route, UserInfo } from './messenger';
 import { NormalEvent } from './normal-event';
-import { defaultPfp } from '../assets/defaultPfp';
+
+const defaultPfp = require('!!raw-loader?!../assets/defaultPfp.txt') as string;
 
 @Injectable({
   providedIn: 'root'
