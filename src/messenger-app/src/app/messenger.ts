@@ -34,7 +34,7 @@ export class User {
 export class AESCBCKey {
     public static readonly keyGenAlgorithm = {
         name: 'AES-CBC', // aes in cipher block chaining mode
-        length: 128 // 128 bit key
+        length: 256 // 256 bit key
     };
     public static readonly IV_LENGTH = 16;
     encryptionAlgorithm: any;
