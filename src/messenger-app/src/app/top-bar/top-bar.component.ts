@@ -16,4 +16,6 @@ export class TopBarComponent implements OnInit {
   public get userInfo() {
     return this.messenger.requireUserInfo();
   }
+
+  public logout = this.messenger.logout.bind(this.messenger);
 }
