@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MessengerService } from '../messenger.service';
 
 @Component({
   selector: 'app-route-list',
@@ -6,10 +7,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./route-list.component.scss']
 })
 export class RouteListComponent implements OnInit {
+  showNewRoutePopup: boolean = false;
+  newRouteWordKey: string = "";
 
-  constructor() { }
+  constructor(private messenger: MessengerService) { }
 
   ngOnInit(): void {
   }
 
+  get routes() {
+    return this.messenger.getRoutes();
+  }
+
+  onNewRouteClick(): void {
+    this.showNewRoutePopup = true;
+  }
 }

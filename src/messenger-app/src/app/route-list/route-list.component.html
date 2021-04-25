@@ -1,1 +1,12 @@
-<p>route-list works!</p>
+<div class="top-bar">
+    <p>Routes</p>
+    <button (click)="onNewRouteClick()" class="new-route-button">+</button>
+</div>
+<app-popup [shown]="showNewRoutePopup">
+    <p>New route created! Your route word-key is:</p>
+    <h1>{{ newRouteWordKey }}</h1>
+    <button class="big-button" (click)="showNewRoutePopup = false">Continue</button>
+</app-popup>
+<div *ngFor="let route of routes">
+    <app-small-profile [userInfo]="route.userInfo"></app-small-profile>
+</div>
