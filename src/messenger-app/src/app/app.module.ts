@@ -14,7 +14,6 @@ import { LoginComponent } from './login/login.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { PopupComponent } from './popup/popup.component';
 import { RouteListComponent } from './route-list/route-list.component';
-import { NewRouteComponent } from './new-route/new-route.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +28,6 @@ import { NewRouteComponent } from './new-route/new-route.component';
     TopBarComponent,
     PopupComponent,
     RouteListComponent,
-    NewRouteComponent,
   ],
   imports: [
     BrowserModule,
