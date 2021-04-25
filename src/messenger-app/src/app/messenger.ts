@@ -1,6 +1,23 @@
 import { IvyParser } from "@angular/compiler";
 import { decodeFromWords, encodeToWords } from "./word-encode";
 
+export class Session {
+    public user: User;
+    public key: AESCBCKey;
+
+    public constructor(user: User, key: AESCBCKey) {
+        this.user = user;
+        this.key = key;
+    }
+
+    public static async fromJSON(jsonObject: any): Promise<Session> {
+        return new Session(
+            User.fromJSON(jsonObject.user),
+            await AESCBCKey.fromJSON(jsonObject.key)
+        );
+    }
+}
+
 export class User {
     public username: string;
     public pfpDataURL: string;
