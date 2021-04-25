@@ -125,12 +125,20 @@ export class UserInfo {
 export class Route {
     public userInfo: UserInfo;
     public key: AESCBCKey;
-    public routeOwned: boolean;
+    public owned: boolean;
 
-    public constructor(userInfo: UserInfo, key: AESCBCKey, routeOwned: boolean) {
+    public constructor(userInfo: UserInfo, key: AESCBCKey, owned: boolean) {
         this.userInfo = userInfo;
         this.key = key;
-        this.routeOwned = routeOwned;
+        this.owned = owned;
+    }
+
+    public static async generate(): Promise<Route> {
+        return new Route(
+            new UserInfo(),
+            await AESCBCKey.generate(),
+            true
+        );
     }
 
     public static async fromJSON(jsonObject: any): Promise<Route> {
