@@ -1,7 +1,7 @@
 import { ThrowStmt } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { User, Message, AESCBCKey, Route, UserInfo } from './messenger';
+import { User, Message, AESCBCKey, Route, UserInfo, Session } from './messenger';
 
 const defaultPfp = require('!!raw-loader?!../assets/defaultPfp.txt').default;
 
@@ -15,9 +15,8 @@ export class MessengerService {
   public static readonly REGISTER_ROUTE: string = 'register';
   public static readonly APP_ROUTE: string = 'app';
   public static readonly LANDING_HOME_URL: string = 'home';
-  private _session: User | null = null;
+  private _session: Session | null = null;
   private _users: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>();
-  private _userKey: AESCBCKey | null = null;
 
   public get sessionAvailable(): boolean {
     return sessionStorage.getItem(MessengerService.USER_SESSION_STORAGE_KEY) != null;
@@ -28,8 +27,8 @@ export class MessengerService {
   }
 
   constructor(private router: Router) {
-    this.pullUsers(); // pull users from local storage
     this.pullSession(); // pull session from session storage if available
+    this.pullUsers(); // pull users from local storage
   }
 
   public requireLoggedIn(): void {
@@ -38,17 +37,17 @@ export class MessengerService {
     }
   }
 
-  public requireSession(): User {
+  public requireSession(): Session {
     // raise error if user is not logged in
     if (!this.loggedIn) {
       throw Error('User is not logged in.');
     }
 
-    return <User>this._session; // cast user to User and return
+    return <Session>this._session; // cast user to User and return
   }
 
   public requireUserInfo(): UserInfo {
-    return this.requireSession().toUserInfo();
+    return this.requireSession().user.toUserInfo();
   }
 
   /**
@@ -56,17 +55,17 @@ export class MessengerService {
    * @returns the messages of the logged in user.
    */
   public getMessages(): Message[] {
-    return this.requireSession().messages;
+    return this.requireSession().user.messages;
   }
 
   public getRoutes(): Route[] {
-    return this.requireSession().routes;
+    return this.requireSession().user.routes;
   }
 
   public setUserPfpFromFile(file: File): void {
     const reader = new FileReader();
     reader.onloadend = () => {
-      this.requireSession().pfpDataURL = <string>reader.result; // cast result to string (because it is a data url) and set pfpDataURL
+      this.requireSession().user.pfpDataURL = <string>reader.result; // cast result to string (because it is a data url) and set pfpDataURL
       this.pushSession(); // push updated user to session storage
     };
     reader.readAsDataURL(file); // read the image as a data url
@@ -74,62 +73,64 @@ export class MessengerService {
 
   public async generateRoute(): Promise<Route> {
     const route = await Route.generate(); // generate new route
-    this.requireSession().routes.push(route); // add it to the user's routes
+    this.requireSession().user.routes.push(route); // add it to the user's routes
     this.pushSession(); // push the user session to storage
     return route;
   }
 
   public async register(username: string): Promise<string> {
-    this._session = new User(username); // create a new user with the given username and store it in session
-    this._session.pfpDataURL = defaultPfp; // set pfp to default pfp
-    this._userKey = await AESCBCKey.generate(); // generate new UserKey and store it in _userKey
-    this.pushSession(); // push user session to storage
-    return await this._userKey.toDataURL(); // return key as a data url
+    const user = new User(username); // create a new user with the given username
+    user.pfpDataURL = defaultPfp; // set pfp to default pfp
+    const key = await AESCBCKey.generate(); // generate new UserKey
+    this._session = new Session(user, key); // create session from new user and key
+    this.pushSession(); // push session to storage
+    console.log('registering');
+    console.log(await key.toDataURL());
+    return await key.toDataURL(); // return key as a data url
   }
   
   public login(username: string, keyFile: File) {
     const reader = new FileReader();
-    reader.onloadend = () => {
-      AESCBCKey.fromJSON(JSON.parse(<string>reader.result)) // load key from file contents
-        .then(userKey => {
-          this._userKey = userKey; // set _userKey to result
-          const ciphertext = this._users.get(username); // get ciphertext from users
-          return userKey.decrypt(<ArrayBuffer>ciphertext); // cast to arraybuffer and decrypt
-        })
-        .then(buffer => {
-          this._session = User.fromJSON(JSON.parse(new TextDecoder().decode(buffer)));
-          this.pushSession();
-          this.router.navigate([MessengerService.APP_ROUTE]);
-        });
+    reader.onloadend = async () => {
+      const key = await AESCBCKey.fromJSON(JSON.parse(<string>reader.result)) // load key from file contents
+      const ciphertext = this._users.get(username); // get ciphertext from users
+      const plaintext = await key.decrypt(<ArrayBuffer>ciphertext); // cast to arraybuffer and decrypt
+      console.log('key:', key);
+      console.log('plaintext:', plaintext, new TextDecoder().decode(plaintext));
+      console.log('ciphertext:', ciphertext);
+      const user = User.fromJSON(JSON.parse(new TextDecoder().decode(plaintext))); // load user from JSON string
+      this._session = new Session(user, key); // create session from user and key
+      this.pushSession();
+      this.router.navigate([MessengerService.APP_ROUTE]); // navigate to main page
     }
     reader.readAsText(keyFile);
   }
 
   public logout() {
-    this.pushSession(); // push session to storage
-    this._session = null; // set session to null
-    sessionStorage.removeItem(MessengerService.USER_SESSION_STORAGE_KEY); // clear user session from session storage
-    window.location.pathname = MessengerService.LANDING_HOME_URL; // navigate out of app to home url
+    this.pushSession() // push session to storage
+    .then(() => { // wait for session push completion
+      this._session = null; // set session to null
+      sessionStorage.removeItem(MessengerService.USER_SESSION_STORAGE_KEY); // clear user session from session storage
+      window.location.pathname = MessengerService.LANDING_HOME_URL; // navigate out of app to home url
+    });
   }
 
   /**
    * Pulls the session from session storage.
    */
-  private pullSession(): void {
-    this._session = this.getSession();
+  private async pullSession(): Promise<void> {
+    this._session = await this.getSession();
   }
 
   /**
    * Pushes the current user to the users map and to session storage.
    */
-  private pushSession(): void {
-    this.setSession(this.requireSession());
-    // cast _userKey to AESCBCKey because _userKey should be set if requireUser() passed and encrypt user
-    (<AESCBCKey>this._userKey).encrypt(new TextEncoder().encode(JSON.stringify(this.requireSession())))
-      .then((ciphertext) => {
-        this._users.set(this.requireSession().username, ciphertext); // update users with ciphertext
-        this.pushUsers(); // push users to local storage
-      });
+  private async pushSession(): Promise<void> {
+    await this.setSession(this.requireSession());
+    // encrypt session
+    const ciphertext = await this.requireSession().key.encrypt(new TextEncoder().encode(JSON.stringify(this.requireSession().user)));
+    this._users.set(this.requireSession().user.username, ciphertext); // update users with ciphertext
+    this.pushUsers(); // push users to local storage
   }
 
   /**
@@ -154,19 +155,21 @@ export class MessengerService {
    */
   private pushUsers(): void {
     const dictionary: any = {}; // create new empty object
-    const decoder = new TextDecoder();
     this._users.forEach((value, key) => { dictionary[key] = Array.from(new Uint8Array(value)) }); // for each value key pair in _users set the corresponding pair in the dictionary and convert the value to a uint8array so that it can be converted to json
     localStorage.setItem(MessengerService.USERS_STORAGE_KEY, JSON.stringify(dictionary));
   }
 
-  private getSession(): User | null {
-    const data = sessionStorage.getItem(MessengerService.USER_SESSION_STORAGE_KEY); // pull user from storage as a JSON string
+  private async getSession(): Promise<Session | null> {
+    const data = sessionStorage.getItem(MessengerService.USER_SESSION_STORAGE_KEY); // pull session from storage as a JSON string
     if (data == null) { return null; } // return null if stored data is null
-    const user = User.fromJSON(JSON.parse(data)); // otherwise convert the JSON string to an instance of User
-    return user;
+    const session = await Session.fromJSON(JSON.parse(data)); // otherwise convert the JSON string to an instance of Session
+    return session;
   }
 
-  private setSession(user: User) {
-    sessionStorage.setItem(MessengerService.USER_SESSION_STORAGE_KEY, JSON.stringify(user)); // set user in session storage
+  private async setSession(session: Session) {
+    console.log('setting session')
+    console.log(session);
+    console.log(await session.toJSON())
+    sessionStorage.setItem(MessengerService.USER_SESSION_STORAGE_KEY, JSON.stringify(await session.toJSON())); // set user in session storage
   }
 }

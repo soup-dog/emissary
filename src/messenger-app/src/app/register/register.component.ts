@@ -29,7 +29,7 @@ export class RegisterComponent implements OnInit {
     this.messenger.register(this.registerForm.value["username"])
       .then((keyDataURL) => {
         this.keyDataURL = this.sanitiser.bypassSecurityTrustUrl(keyDataURL); // set key data url
-        this.username = this.messenger.requireSession().username; // set username
+        this.username = this.messenger.requireSession().user.username; // set username
         this.shown = true; // show popup
       });
   }

@@ -16,6 +16,13 @@ export class Session {
             await AESCBCKey.fromJSON(jsonObject.key)
         );
     }
+
+    public async toJSON(): Promise<any> {
+        return {
+            user: this.user,
+            key: await this.key.toJSON()
+        };
+    }
 }
 
 export class User {
@@ -82,19 +89,17 @@ export class AESCBCKey {
 
     public static async fromJSON(jsonObject: any): Promise<AESCBCKey> {
         return new AESCBCKey(
-            // import non-extractable key from json web key
-            await window.crypto.subtle.importKey("jwk", jsonObject.cryptoKey, AESCBCKey.keyGenAlgorithm, false, ["encrypt", "decrypt"]),
+            // import extractable key from json web key (extractable because it needs to be stored in the session)
+            await window.crypto.subtle.importKey("jwk", jsonObject.cryptoKey, AESCBCKey.keyGenAlgorithm, true, ["encrypt", "decrypt"]),
             new Uint8Array(jsonObject.iv)
         );
     }
 
-    public async toJSON(): Promise<string> {
-        const jsonObject = {
+    public async toJSON(): Promise<any> {
+        return {
             cryptoKey: await window.crypto.subtle.exportKey("jwk", this.cryptoKey), // export key as a json web key
             iv: Array.from(this.encryptionAlgorithm.iv)
         };
-
-        return JSON.stringify(jsonObject);
     }
 
     public async toWords(): Promise<string[]> {
@@ -111,7 +116,7 @@ export class AESCBCKey {
     }
 
     public async toDataURL(): Promise<string> {
-        const blob = new Blob([await this.toJSON()]); // create new blob from this as a JSON string
+        const blob = new Blob([JSON.stringify(await this.toJSON())]); // create new blob from this as a JSON string
         return new Promise((resolve) => {
             const reader = new FileReader();
             reader.onloadend = () => resolve(<string>reader.result); // resolve promise with result when onloadend
