@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MessengerService } from '../messenger.service';
 
 @Component({
@@ -8,7 +9,11 @@ import { MessengerService } from '../messenger.service';
 })
 export class RouteListComponent implements OnInit {
   showNewRoutePopup: boolean = false;
-  newRouteWordKey: string = "";
+  createRouteWordKey: string = '';
+  routeCreated: boolean = false;
+  addRouteForm: FormGroup = new FormGroup({
+    wordKey: new FormControl('')
+  });
 
   constructor(private messenger: MessengerService) { }
 
@@ -21,5 +26,18 @@ export class RouteListComponent implements OnInit {
 
   onNewRouteClick(): void {
     this.showNewRoutePopup = true;
+  }
+
+  onAddRouteFormSubmit(): void {
+
+  }
+
+  onCreateRoute(): void {
+    this.messenger.generateRoute() // generate new route
+      .then(route => route.key.toWords()) // convert key to words
+      .then(words => {
+        this.createRouteWordKey = words.join(' '); // set word key
+        this.routeCreated = true; // show in DOM
+      });
   }
 }

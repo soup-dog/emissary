@@ -36,6 +36,10 @@ export class User {
         this.pfpDataURL = pfpDataURL;
         this.messages = messages;
         this.routes = routes;
+        // populate routes' messages
+        for (let message of messages) {
+            routes[message.routeIndex].messages.push(message);
+        }
     }
 
     public static async fromJSON(jsonObject: any): Promise<User> {
@@ -168,11 +172,13 @@ export class Route {
     public userInfo: UserInfo;
     public key: AESCBCKey;
     public owned: boolean;
+    public messages: Message[];
 
     public constructor(userInfo: UserInfo, key: AESCBCKey, owned: boolean) {
         this.userInfo = userInfo;
         this.key = key;
         this.owned = owned;
+        this.messages = [];
     }
 
     public static async generate(): Promise<Route> {
@@ -201,21 +207,24 @@ export class Route {
 }
 
 export class Message {
-    author: UserInfo;
-    content: string;
-    sentByRouteOwner: boolean;
+    public author: UserInfo;
+    public content: string;
+    public sentByRouteOwner: boolean;
+    public routeIndex: number;
 
-    constructor(content: string, author: UserInfo, sentByRouteOwner: boolean) {
+    public constructor(content: string, author: UserInfo, sentByRouteOwner: boolean, routeIndex: number) {
         this.content = content;
         this.author = author;
         this.sentByRouteOwner = sentByRouteOwner;
+        this.routeIndex = routeIndex;
     }
 
     public static fromJSON(jsonObject: any): Message {
         return new Message(
             jsonObject.content,
             UserInfo.fromJSON(jsonObject.author),
-            jsonObject.sentByRouteOwner
+            jsonObject.sentByRouteOwner,
+            jsonObject.routeIndex
         );
     }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from '../messenger';
 import { MessengerService } from '../messenger.service';
 
 @Component({
@@ -15,5 +16,9 @@ export class MessengerComponent implements OnInit {
 
   public get ready() {
     return this.messenger.ready;
+  }
+
+  public get messages(): Message[] {
+    return this.messenger.getMessages();
   }
 }

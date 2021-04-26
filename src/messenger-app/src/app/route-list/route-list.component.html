@@ -3,10 +3,21 @@
     <button (click)="onNewRouteClick()" class="new-route-button">+</button>
 </div>
 <app-popup [shown]="showNewRoutePopup">
-    <p>New route created! Your route word-key is:</p>
-    <h1>{{ newRouteWordKey }}</h1>
-    <button class="big-button" (click)="showNewRoutePopup = false">Continue</button>
+    <img src="./assets/cross.svg" alt="popup close button" class="cross" (click)="showNewRoutePopup = false">
+    <p>Generate a new route:</p>
+    <button class="big-button" (click)="onCreateRoute()">Generate</button>
+    <div *ngIf="routeCreated">
+        <p>New route generated! Your route word-key is:</p>
+        <h1>{{ createRouteWordKey }}</h1>
+    </div>
+    <p>Add a route by word-key:</p>
+    <form [formGroup]="addRouteForm" (ngSubmit)="onAddRouteFormSubmit()">
+        <label>
+            Word-key: <input type="text" name="" id="" formControlName="wordKey">
+        </label>
+        <button type="submit" class="big-button">Add route</button>
+    </form>
 </app-popup>
-<div *ngFor="let route of routes">
-    <app-small-profile [userInfo]="route.userInfo"></app-small-profile>
+<div *ngFor="let route of routes; index as i">
+    <a [routerLink]="['/route', i]">{{ route.userInfo.username }}</a>
 </div>

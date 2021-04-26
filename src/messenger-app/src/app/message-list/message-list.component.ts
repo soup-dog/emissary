@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Message, User } from '../messenger';
 import { MessengerService } from '../messenger.service';
 
@@ -8,14 +8,11 @@ import { MessengerService } from '../messenger.service';
   styleUrls: ['./message-list.component.scss']
 })
 export class MessageListComponent implements OnInit {
-  constructor(private messenger: MessengerService) { }
-  
-  get messages(): Message[] {
-    return this.messenger.getMessages();
-  }
+  @Input() messages: Message[] = [];
+
+  constructor() { }
 
   ngOnInit(): void {
-    this.messenger.requireLoggedIn();
   }
 
 }
