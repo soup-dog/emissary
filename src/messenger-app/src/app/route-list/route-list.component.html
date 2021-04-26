@@ -19,5 +19,5 @@
     </form>
 </app-popup>
 <div *ngFor="let route of routes; index as i">
-    <a [routerLink]="['/route', i]">{{ route.userInfo.username }}</a>
+    <app-small-profile [routerLink]="['/route', i]" [userInfo]="route.userInfo"></app-small-profile>
 </div>
