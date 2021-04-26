@@ -131,7 +131,7 @@ export class MessengerService {
   private async pushSession(): Promise<void> {
     await this.setSession(this.requireSession());
     // encrypt session
-    const ciphertext = await this.requireSession().key.encrypt(new TextEncoder().encode(JSON.stringify(this.requireSession().user)));
+    const ciphertext = await this.requireSession().key.encrypt(new TextEncoder().encode(JSON.stringify(await this.requireSession().user.toJSON())));
     this._users.set(this.requireSession().user.username, ciphertext); // update users with ciphertext
     this.pushUsers(); // push users to local storage
   }

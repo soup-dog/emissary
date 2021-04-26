@@ -19,7 +19,7 @@ export class Session {
 
     public async toJSON(): Promise<any> {
         return {
-            user: this.user,
+            user: await this.user.toJSON(),
             key: await this.key.toJSON()
         };
     }
@@ -47,6 +47,19 @@ export class User {
         );
     }
 
+    public async toJSON(): Promise<any> {
+        const routes: any[] = new Array<any>(this.routes.length);
+        for (let i = 0; i < this.routes.length; i++) {
+            routes[i] = await this.routes[i].toJSON();
+        }
+        return {
+            username: this.username,
+            pfpDataURL: this.pfpDataURL,
+            messages: this.messages,
+            routes: routes
+        };
+    }
+
     public toUserInfo(): UserInfo {
         return new UserInfo(
             this.username,
@@ -58,7 +71,7 @@ export class User {
 export class AESCBCKey {
     public static readonly keyGenAlgorithm = {
         name: 'AES-CBC', // aes in cipher block chaining mode
-        length: 256 // 256 bit key
+        length: 128 // 128 bit key
     };
     public static readonly IV_LENGTH = 16;
     encryptionAlgorithm: any;
@@ -103,8 +116,11 @@ export class AESCBCKey {
     }
 
     public async toWords(): Promise<string[]> {
-        return encodeToWords(await window.crypto.subtle.exportKey("raw", this.cryptoKey)
-         + this.encryptionAlgorithm.iv);
+        const rawKey = await window.crypto.subtle.exportKey("raw", this.cryptoKey);
+        const temp = new Uint8Array(rawKey.byteLength + this.encryptionAlgorithm.iv.byteLength);
+        temp.set(new Uint8Array(rawKey), 0);
+        temp.set(new Uint8Array(this.encryptionAlgorithm.iv), rawKey.byteLength);
+        return encodeToWords(new Uint32Array(temp.buffer));
     }
 
     public static async fromWords(words: string[]): Promise<AESCBCKey> {
@@ -167,6 +183,14 @@ export class Route {
             await AESCBCKey.fromJSON(jsonObject.key),
             jsonObject.routeOwned
         );
+    }
+
+    public async toJSON() {
+        return {
+            userInfo: this.userInfo,
+            key: await this.key.toJSON(),
+            owned: this.owned
+        }
     }
 }
 
