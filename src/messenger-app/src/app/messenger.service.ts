@@ -194,6 +194,7 @@ export class MessengerService {
       }
     }
 
+    this.setMailbox(mailbox); // push mailbox changes to storage
     this.requireSession().user.populateRouteMessages(); // populate routes with new messages
   }
 
