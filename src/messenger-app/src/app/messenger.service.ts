@@ -12,9 +12,9 @@ export class MessengerService {
   public static readonly USER_SESSION_STORAGE_KEY: string = 'user';
   public static readonly MAILBOX_STORAGE_KEY: string = 'mailbox';
   public static readonly USERS_STORAGE_KEY: string = 'users';
-  public static readonly REGISTER_ROUTE: string = 'register';
-  public static readonly APP_ROUTE: string = 'app';
-  public static readonly LANDING_HOME_URL: string = 'home';
+  public static readonly REGISTER_ROUTE: string = 'register.html';
+  public static readonly APP_ROUTE: string = 'app.html';
+  public static readonly LANDING_HOME_URL: string = 'home.html';
   private _session: Session | null = null;
   private _users: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>();
   public ready: boolean = false;
