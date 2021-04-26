@@ -98,9 +98,17 @@ export class AESCBCKey {
     public async encrypt(plain: ArrayBuffer): Promise<ArrayBuffer> {
         return await window.crypto.subtle.encrypt(this.encryptionAlgorithm, this.cryptoKey, plain);
     }
+
+    public async JSONEncrypt(jsonObject: any): Promise<ArrayBuffer> {
+        return await this.encrypt(new TextEncoder().encode(JSON.stringify(jsonObject)));
+    }
     
     public async decrypt(buffer: ArrayBuffer): Promise<ArrayBuffer> {
         return await window.crypto.subtle.decrypt(this.encryptionAlgorithm, this.cryptoKey, buffer);
+    }
+
+    public async JSONDecrypt(buffer: ArrayBuffer): Promise<any> {
+        return JSON.parse(new TextDecoder().decode(await this.decrypt(buffer)));
     }
 
     public static async generate(): Promise<AESCBCKey> {
