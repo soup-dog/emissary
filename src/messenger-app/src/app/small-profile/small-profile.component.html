@@ -1,6 +1,6 @@
-<a routerLink="/account.html">
+<a [routerLink]="routerLink">
     <img [src]="userInfo!.pfpDataURL" alt="Profile picture" class="profile-picture">
 </a>
-<a routerLink="/account.html">
+<a [routerLink]="routerLink">
     <p>{{ userInfo!.username }}</p>
 </a>

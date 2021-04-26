@@ -8,6 +8,7 @@ import { UserInfo } from '../messenger';
 })
 export class SmallProfileComponent implements OnInit {
   @Input() userInfo: UserInfo | null = null;
+  @Input() routerLink: string | any[] | null | undefined = "/account";
 
   constructor() { }
 
