@@ -36,6 +36,14 @@ export class User {
         this.pfpDataURL = pfpDataURL;
         this.messages = messages;
         this.routes = routes;
+        this.populateRouteMessages();
+    }
+
+    public addMessage(message: Message): void {
+        this.messages.push(message); // add message to messages
+        const route = this.routes[message.routeIndex];
+        route.messages.push(message); // add message to route message list
+        route.userInfo = message.author; // update route userInfo
     }
 
     public populateRouteMessages(): void {

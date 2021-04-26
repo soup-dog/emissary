@@ -81,8 +81,10 @@ export class MessengerService {
     const route = this.requireSession().user.routes[routeIndex];
     const message = new Message(content, this.requireSession().user.toUserInfo(), route.owned, routeIndex); // create message
     const ciphertext = await route.key.JSONEncrypt(message); // convert to JSON, then utf-8, then encrypt
+    this.requireSession().user.addMessage(message); // add message to user
     mailbox.push(new Uint8Array(ciphertext)); // add message to mailbox
     this.setMailbox(mailbox); // push changes to local storage
+    this.pushSession(); // push session changes to storage
   }
 
   public async generateRoute(): Promise<Route> {
@@ -186,7 +188,7 @@ export class MessengerService {
           const message = Message.fromJSON(await route.key.JSONDecrypt(ciphertext)); // try decrypt
           // successful
           if (route.owned != message.sentByRouteOwner) { // if the message is not from the user
-            this.requireSession().user.messages.push(message); // add message to user messages store
+            this.requireSession().user.addMessage(message); // add message to user
             mailbox.splice(i, 1); // remove message from mailbox
           }
         }
@@ -195,7 +197,7 @@ export class MessengerService {
     }
 
     this.setMailbox(mailbox); // push mailbox changes to storage
-    this.requireSession().user.populateRouteMessages(); // populate routes with new messages
+    this.pushSession(); // push session changes to storage
   }
 
   private async getSession(): Promise<Session | null> {
