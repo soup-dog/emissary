@@ -30,7 +30,6 @@ export class MessengerService {
   constructor(private router: Router) {
     this.pullSession().then(() => {// pull session from session storage if available
       this.ready = true;
-      console.log(this.requireSession());
     });
     this.pullUsers(); // pull users from local storage
   }
@@ -88,8 +87,6 @@ export class MessengerService {
     const key = await AESCBCKey.generate(); // generate new UserKey
     this._session = new Session(user, key); // create session from new user and key
     this.pushSession(); // push session to storage
-    console.log('registering');
-    console.log(await key.toDataURL());
     return await key.toDataURL(); // return key as a data url
   }
   
