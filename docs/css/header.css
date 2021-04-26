@@ -1,0 +1,34 @@
+.header-logo {
+    height: 1.5em;
+}
+
+.header-links {
+    display: flex;
+}
+
+.header-links a {
+    text-align: center;
+    /* vertical-align: middle; */
+    color: var(--dark);
+    background-color: var(--light);
+    padding: 5%;
+    transition: color 300ms, background-color 300ms;
+}
+
+.header-links a:hover {
+    color: var(--light);
+    background-color: var(--dark);
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    flex-wrap: wrap;
+    background-color: var(--light);
+}
+
+header * {
+    margin: 1%;
+}
