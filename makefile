@@ -18,6 +18,7 @@ all: landing app
 .PHONY: clean
 clean:
 	$(RM) -r $(output_dir)
+	$(RM) -r docs
 	mkdir $(output_dir)
 
 .PHONY: landing
@@ -38,5 +39,6 @@ app-static-fix:
 	for route in $(app_routes); do cp "$(app_output_dir)/index.html" "$(app_output_dir)/$$route.html"; done
 
 .PHONY: gh-pages
-gh-pages: all
+gh-pages:
+	$(RM) -r docs
 	cp -r $(output_dir) docs
