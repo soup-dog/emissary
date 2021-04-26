@@ -25,8 +25,10 @@ export class MessageRouteComponent implements OnInit {
   }
 
   onMessageFormSubmit(): void {
-    this.messenger.sendMessage(this.messageForm.value["message"], this.routeIndex);
-    this.messageForm.value["message"] = "";
+    this.messenger.sendMessage(this.messageForm.value['message'], this.routeIndex);
+    this.messageForm.patchValue({
+      message: ''
+    }); // clear the text input
   }
 
 }
