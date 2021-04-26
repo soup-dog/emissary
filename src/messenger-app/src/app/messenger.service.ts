@@ -10,7 +10,7 @@ const defaultPfp = require('!!raw-loader?!../assets/defaultPfp.txt').default;
 })
 export class MessengerService {
   public static readonly USER_SESSION_STORAGE_KEY: string = 'user';
-  public static readonly MESSAGES_STORAGE_KEY: string = 'messages';
+  public static readonly MAILBOX_STORAGE_KEY: string = 'mailbox';
   public static readonly USERS_STORAGE_KEY: string = 'users';
   public static readonly REGISTER_ROUTE: string = 'register';
   public static readonly APP_ROUTE: string = 'app';
@@ -74,6 +74,16 @@ export class MessengerService {
     reader.readAsDataURL(file); // read the image as a data url
   }
 
+  public async sendMessage(content: string, routeIndex: number) {
+    console.log("in send message")
+    const mailbox = this.getMailbox();
+    const route = this.requireSession().user.routes[routeIndex];
+    const message = new Message(content, this.requireSession().user.toUserInfo(), route.owned, routeIndex); // create message
+    const ciphertext = await route.key.JSONEncrypt(message); // convert to JSON, then utf-8, then encrypt
+    mailbox.push(new Uint8Array(ciphertext)); // add message to mailbox
+    this.setMailbox(mailbox); // push changes to local storage
+  }
+
   public async generateRoute(): Promise<Route> {
     const route = await Route.generate(); // generate new route
     this.requireSession().user.routes.push(route); // add it to the user's routes
@@ -96,9 +106,6 @@ export class MessengerService {
       const key = await AESCBCKey.fromJSON(JSON.parse(<string>reader.result)) // load key from file contents
       const ciphertext = this._users.get(username); // get ciphertext from users
       const plaintext = await key.decrypt(<ArrayBuffer>ciphertext); // cast to arraybuffer and decrypt
-      console.log('key:', key);
-      console.log('plaintext:', plaintext, new TextDecoder().decode(plaintext));
-      console.log('ciphertext:', ciphertext);
       const user = await User.fromJSON(JSON.parse(new TextDecoder().decode(plaintext))); // load user from JSON string
       this._session = new Session(user, key); // create session from user and key
       this.pushSession();
@@ -128,8 +135,8 @@ export class MessengerService {
    */
   private async pushSession(): Promise<void> {
     await this.setSession(this.requireSession());
-    // encrypt session
-    const ciphertext = await this.requireSession().key.encrypt(new TextEncoder().encode(JSON.stringify(await this.requireSession().user.toJSON())));
+    // encrypt the user from session as a JSON compatible object
+    const ciphertext = await this.requireSession().key.JSONEncrypt(await this.requireSession().user.toJSON())
     this._users.set(this.requireSession().user.username, ciphertext); // update users with ciphertext
     this.pushUsers(); // push users to local storage
   }
@@ -167,7 +174,17 @@ export class MessengerService {
     return session;
   }
 
-  private async setSession(session: Session) {
+  private async setSession(session: Session): Promise<void> {
     sessionStorage.setItem(MessengerService.USER_SESSION_STORAGE_KEY, JSON.stringify(await session.toJSON())); // set user in session storage
+  }
+
+  private getMailbox(): Array<Uint8Array> {
+    const dataString = localStorage.getItem(MessengerService.MAILBOX_STORAGE_KEY);
+    if (dataString === null) { return []; } // return empty array if result is null
+    return JSON.parse(dataString).map((message: any) => new TextEncoder().encode(message)); // parse and encode back into Uint8Arrays
+  }
+  
+  private setMailbox(messages: Array<Uint8Array>): void {
+    localStorage.setItem(MessengerService.MAILBOX_STORAGE_KEY, JSON.stringify(messages.map(message => new TextDecoder().decode(message)))); // decode to utf-8 and stringify
   }
 }
