@@ -28,8 +28,10 @@ export class MessengerService {
   }
 
   constructor(private router: Router) {
-    this.pullSession().then(() => {// pull session from session storage if available
-      this.ready = true;
+    this.pullSession() // pull session from session storage if available
+    .then(() => {
+      this.ready = true; // set ready
+      this.pullMessages(); // pull new messages from mailbox
     });
     this.pullUsers(); // pull users from local storage
   }
@@ -74,7 +76,7 @@ export class MessengerService {
     reader.readAsDataURL(file); // read the image as a data url
   }
 
-  public async sendMessage(content: string, routeIndex: number) {
+  public async sendMessage(content: string, routeIndex: number): Promise<void> {
     const mailbox = this.getMailbox();
     const route = this.requireSession().user.routes[routeIndex];
     const message = new Message(content, this.requireSession().user.toUserInfo(), route.owned, routeIndex); // create message
@@ -108,6 +110,7 @@ export class MessengerService {
       const user = await User.fromJSON(JSON.parse(new TextDecoder().decode(plaintext))); // load user from JSON string
       this._session = new Session(user, key); // create session from user and key
       this.pushSession();
+      this.pullMessages();
       this.router.navigate([MessengerService.APP_ROUTE]); // navigate to main page
     }
     reader.readAsText(keyFile);
@@ -166,6 +169,28 @@ export class MessengerService {
     localStorage.setItem(MessengerService.USERS_STORAGE_KEY, JSON.stringify(dictionary));
   }
 
+  private async pullMessages(): Promise<void> {
+    if (!this.loggedIn) { return; } // return early if not logged in
+
+    const mailbox = this.getMailbox();
+    for (let i = 0; i < mailbox.length; i++) {
+      let ciphertext = mailbox[i];
+      for (let route of this.requireSession().user.routes) {
+        try {
+          const message = Message.fromJSON(await route.key.JSONDecrypt(ciphertext)); // try decrypt
+          // successful
+          if (route.owned != message.sentByRouteOwner) { // if the message is not from the user
+            this.requireSession().user.messages.push(message); // add message to user messages store
+            mailbox.splice(i, 1); // remove message from mailbox
+          }
+        }
+        catch(error) {} // not successful
+      }
+    }
+
+    this.requireSession().user.populateRouteMessages(); // populate routes with new messages
+  }
+
   private async getSession(): Promise<Session | null> {
     const data = sessionStorage.getItem(MessengerService.USER_SESSION_STORAGE_KEY); // pull session from storage as a JSON string
     if (data == null) { return null; } // return null if stored data is null
@@ -180,10 +205,10 @@ export class MessengerService {
   private getMailbox(): Array<Uint8Array> {
     const dataString = localStorage.getItem(MessengerService.MAILBOX_STORAGE_KEY);
     if (dataString === null) { return []; } // return empty array if result is null
-    return JSON.parse(dataString).map((message: any) => new TextEncoder().encode(message)); // parse and encode back into Uint8Arrays
+    return JSON.parse(dataString).map((message: any) => new Uint8Array(message)); // parse and encode back into Uint8Arrays
   }
   
   private setMailbox(messages: Array<Uint8Array>): void {
-    localStorage.setItem(MessengerService.MAILBOX_STORAGE_KEY, JSON.stringify(messages.map(message => new TextDecoder().decode(message)))); // decode to utf-8 and stringify
+    localStorage.setItem(MessengerService.MAILBOX_STORAGE_KEY, JSON.stringify(messages.map(message => Array.from(message)))); // decode to utf-8 and stringify
   }
 }
