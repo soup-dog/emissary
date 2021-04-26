@@ -1,6 +1,6 @@
 import { convertBase } from './base-converter';
 
-const indexToWord: string[] = require('!!raw-loader?!../assets/words.txt').default.split('\n'); // get words list
+const indexToWord: string[] = require('!!raw-loader?!../assets/words.txt').default.replace(/\r/g, '').split('\n'); // get words list
 const numWords: number = indexToWord.length;
 const wordToIndex: any = {};
 for (let i = 0; i < numWords; i++) {
@@ -12,5 +12,5 @@ export function encodeToWords(array: Uint32Array): string[] {
 }
 
 export function decodeFromWords(words: string[]): Uint32Array {
-    return convertBase(new Uint32Array(words.map(word => wordToIndex[word])), numWords, 4294967296);
+    return convertBase(new Uint32Array(words.map(word => indexToWord.findIndex(value => value === word))), numWords, 4294967296);
 }
