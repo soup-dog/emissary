@@ -60,3 +60,10 @@ a:hover {
     height: 5vh;
     border-radius: 2.5vh; // make image circular
 }
+
+app-small-profile {
+    display: flex;
+    width: 20vh;
+    justify-content: space-around;
+    align-items: center;
+}
