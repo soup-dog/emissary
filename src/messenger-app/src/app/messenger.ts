@@ -140,24 +140,11 @@ export class AESCBCKey {
         const temp = new Uint8Array(rawKey.byteLength + this.encryptionAlgorithm.iv.byteLength);
         temp.set(new Uint8Array(rawKey), 0);
         temp.set(new Uint8Array(this.encryptionAlgorithm.iv), rawKey.byteLength);
-        console.log(rawKey);
-        console.log(rawKey.byteLength + this.encryptionAlgorithm.iv.byteLength);
-        console.log(rawKey.byteLength, this.encryptionAlgorithm.iv.byteLength);
-        console.log(temp.byteLength);
-        console.log(temp);
-        console.log(new Uint32Array(temp.buffer));
-        console.log(new Uint8Array(new Uint32Array(temp.buffer).buffer))
         return encodeToWords(new Uint32Array(temp.buffer));
     }
 
     public static async fromWords(words: string[]): Promise<AESCBCKey> {
-        console.log(words);
         const fullKey = new Uint8Array(new Uint32Array(decodeFromWords(words)).buffer); // decode form words and convert to Uint8Array
-        console.log(fullKey);
-        console.log(fullKey.length);
-        console.log(fullKey.byteLength);
-        console.log(fullKey.slice(0, AESCBCKey.keyGenAlgorithm.length / 8), fullKey.slice(AESCBCKey.keyGenAlgorithm.length / 8, AESCBCKey.keyGenAlgorithm.length / 8 + AESCBCKey.IV_LENGTH));
-        console.log(AESCBCKey.keyGenAlgorithm.length, AESCBCKey.IV_LENGTH);
         return new AESCBCKey(
             await window.crypto.subtle.importKey("raw", fullKey.slice(0, AESCBCKey.keyGenAlgorithm.length / 8), AESCBCKey.keyGenAlgorithm, true, ["encrypt", "decrypt"]),
             fullKey.slice(AESCBCKey.keyGenAlgorithm.length / 8, AESCBCKey.keyGenAlgorithm.length / 8 + AESCBCKey.IV_LENGTH)
