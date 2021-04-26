@@ -17,6 +17,7 @@ export class MessengerService {
   public static readonly LANDING_HOME_URL: string = 'home';
   private _session: Session | null = null;
   private _users: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>();
+  public ready: boolean = false;
 
   public get sessionAvailable(): boolean {
     return sessionStorage.getItem(MessengerService.USER_SESSION_STORAGE_KEY) != null;
@@ -27,7 +28,9 @@ export class MessengerService {
   }
 
   constructor(private router: Router) {
-    this.pullSession(); // pull session from session storage if available
+    this.pullSession().then(() => {// pull session from session storage if available
+      this.ready = true;
+    });
     this.pullUsers(); // pull users from local storage
   }
 

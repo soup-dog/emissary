@@ -1,5 +1,5 @@
-<app-top-bar></app-top-bar>
+<app-top-bar *ngIf="ready"></app-top-bar>
 <div class="route-list-container">
-    <app-route-list class="container"></app-route-list>
-    <app-message-list class="container"></app-message-list>
+    <app-route-list class="container" *ngIf="ready"></app-route-list>
+    <app-message-list class="container" *ngIf="ready"></app-message-list>
 </div>

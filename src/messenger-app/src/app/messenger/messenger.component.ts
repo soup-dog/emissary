@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MessengerService } from '../messenger.service';
 
 @Component({
   selector: 'app-messenger',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MessengerComponent implements OnInit {
 
-  constructor() { }
+  constructor(private messenger: MessengerService) { }
 
   ngOnInit(): void {
   }
 
+  public get ready() {
+    return this.messenger.ready;
+  }
 }
