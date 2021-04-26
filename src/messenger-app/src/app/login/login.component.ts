@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit {
     username: new FormControl(''),
     keyFile: new FormControl('')
   });
+  public loginError: boolean = false;
 
   constructor(private messenger: MessengerService) { }
 
@@ -20,6 +21,11 @@ export class LoginComponent implements OnInit {
   }
 
   public onSubmit() {
-    this.messenger.login(this.loginForm.value["username"], this.loginForm.value["keyFile"]);   
+    try {
+      this.messenger.login(this.loginForm.value["username"], this.loginForm.value["keyFile"]); 
+    }
+    catch(e) {
+      this.loginError = true;
+    }
   }
 }

@@ -51,6 +51,10 @@ a:hover {
     cursor: pointer;
 }
 
+.big-button:disabled {
+    background-color: rgb(137, 141, 150);
+}
+
 .profile-picture {
     width: 5vh;
     height: 5vh;

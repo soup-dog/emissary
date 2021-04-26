@@ -55,6 +55,10 @@ export class MessengerService {
     return this.requireSession().user.toUserInfo();
   }
 
+  public usernameAvailable(username: string): boolean {
+    return !Array.from(this._users.keys()).some(element => element === username);
+  }
+
   /**
    * 
    * @returns the messages of the logged in user.

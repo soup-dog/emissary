@@ -5,5 +5,8 @@
     <label for="">
         Key File: <input type="file" name="" id="" formControlName="keyFile">
     </label>
-    <button type="submit" [disabled]="!loginForm.valid">Login</button>
+    <button type="submit" class="big-button">Login</button>
 </form>
+<div *ngIf="loginError">
+    Username or key is incorrect.
+</div>
