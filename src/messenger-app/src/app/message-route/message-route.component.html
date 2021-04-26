@@ -1,2 +1,8 @@
 <app-top-bar></app-top-bar>
 <app-message-list [messages]="messageRoute!.messages"></app-message-list>
+<div>
+    <form [formGroup]="messageForm" (ngSubmit)="onMessageFormSubmit()">
+        <input type="text" name="" id="" formControlName="message">
+        <button class="big-button" type="submit">Send</button>
+    </form>
+</div>
