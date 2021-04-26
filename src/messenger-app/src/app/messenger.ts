@@ -177,7 +177,7 @@ export class Route {
 
     public static async generate(): Promise<Route> {
         return new Route(
-            new UserInfo(),
+            new UserInfo("<unknown>"),
             await AESCBCKey.generate(),
             true
         );
@@ -187,7 +187,7 @@ export class Route {
         return new Route(
             UserInfo.fromJSON(jsonObject.userInfo),
             await AESCBCKey.fromJSON(jsonObject.key),
-            jsonObject.routeOwned
+            jsonObject.owned
         );
     }
 
