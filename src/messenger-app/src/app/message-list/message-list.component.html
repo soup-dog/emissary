@@ -1,7 +1,9 @@
 <div class="top-bar">
     <p>Messages</p>
 </div>
-<div *ngFor="let message of messages" class="message-list-item">
-    <p>{{ message.author.username }}</p>
-    <p>{{ message.content }}</p>
+<div class="messages-container">
+    <div *ngFor="let message of messages" class="message-list-item">
+        <a [routerLink]="['/route', message.routeIndex]">{{ message.author.username }}</a>
+        <p>{{ message.content }}</p>
+    </div>
 </div>
