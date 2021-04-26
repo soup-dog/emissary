@@ -29,7 +29,7 @@ export class RouteListComponent implements OnInit {
   }
 
   onAddRouteFormSubmit(): void {
-
+    this.messenger.addRoute(this.addRouteForm.value['wordKey'].split(' '));
   }
 
   onCreateRoute(): void {
