@@ -92,6 +92,12 @@ export class MessengerService {
     return route;
   }
 
+  public async addRoute(words: string[]): Promise<void> {
+    const route = new Route(new UserInfo('<unknown>'), await AESCBCKey.fromWords(words), false);
+    this.requireSession().user.routes.push(route); // add route to user
+    this.pushSession(); // push updated session to storage
+  }
+
   public async register(username: string): Promise<string> {
     const user = new User(username); // create a new user with the given username
     user.pfpDataURL = defaultPfp; // set pfp to default pfp
