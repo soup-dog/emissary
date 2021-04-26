@@ -12,7 +12,7 @@ export class Session {
 
     public static async fromJSON(jsonObject: any): Promise<Session> {
         return new Session(
-            User.fromJSON(jsonObject.user),
+            await User.fromJSON(jsonObject.user),
             await AESCBCKey.fromJSON(jsonObject.key)
         );
     }
@@ -38,12 +38,17 @@ export class User {
         this.routes = routes;
     }
 
-    public static fromJSON(jsonObject: any): User {
+    public static async fromJSON(jsonObject: any): Promise<User> {
+        const routes: Route[] = new Array<Route>(jsonObject.routes.length);
+        for (let i = 0; i < routes.length; i++) {
+            routes[i] = await Route.fromJSON(jsonObject.routes[i]);
+        }
+
         return new User(
             jsonObject.username,
             jsonObject.pfpDataURL,
             jsonObject.messages.map((message: any) => Message.fromJSON(message)),
-            jsonObject.routes.map((route: any) => Route.fromJSON(route))
+            routes
         );
     }
 
@@ -52,6 +57,7 @@ export class User {
         for (let i = 0; i < this.routes.length; i++) {
             routes[i] = await this.routes[i].toJSON();
         }
+
         return {
             username: this.username,
             pfpDataURL: this.pfpDataURL,

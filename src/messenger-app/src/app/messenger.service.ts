@@ -30,6 +30,7 @@ export class MessengerService {
   constructor(private router: Router) {
     this.pullSession().then(() => {// pull session from session storage if available
       this.ready = true;
+      console.log(this.requireSession());
     });
     this.pullUsers(); // pull users from local storage
   }
@@ -101,7 +102,7 @@ export class MessengerService {
       console.log('key:', key);
       console.log('plaintext:', plaintext, new TextDecoder().decode(plaintext));
       console.log('ciphertext:', ciphertext);
-      const user = User.fromJSON(JSON.parse(new TextDecoder().decode(plaintext))); // load user from JSON string
+      const user = await User.fromJSON(JSON.parse(new TextDecoder().decode(plaintext))); // load user from JSON string
       this._session = new Session(user, key); // create session from user and key
       this.pushSession();
       this.router.navigate([MessengerService.APP_ROUTE]); // navigate to main page
@@ -170,9 +171,6 @@ export class MessengerService {
   }
 
   private async setSession(session: Session) {
-    console.log('setting session')
-    console.log(session);
-    console.log(await session.toJSON())
     sessionStorage.setItem(MessengerService.USER_SESSION_STORAGE_KEY, JSON.stringify(await session.toJSON())); // set user in session storage
   }
 }
