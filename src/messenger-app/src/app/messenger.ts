@@ -36,9 +36,11 @@ export class User {
         this.pfpDataURL = pfpDataURL;
         this.messages = messages;
         this.routes = routes;
-        // populate routes' messages
-        for (let message of messages) {
-            routes[message.routeIndex].messages.push(message);
+    }
+
+    public populateRouteMessages(): void {
+        for (let message of this.messages) {
+            this.routes[message.routeIndex].messages.push(message);
         }
     }
 
