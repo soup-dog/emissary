@@ -75,7 +75,6 @@ export class MessengerService {
   }
 
   public async sendMessage(content: string, routeIndex: number) {
-    console.log("in send message")
     const mailbox = this.getMailbox();
     const route = this.requireSession().user.routes[routeIndex];
     const message = new Message(content, this.requireSession().user.toUserInfo(), route.owned, routeIndex); // create message

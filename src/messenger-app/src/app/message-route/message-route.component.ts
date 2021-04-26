@@ -25,7 +25,6 @@ export class MessageRouteComponent implements OnInit {
   }
 
   onMessageFormSubmit(): void {
-    console.log("in onsubmit");
     this.messenger.sendMessage(this.messageForm.value["message"], this.routeIndex);
     this.messageForm.value["message"] = "";
   }
