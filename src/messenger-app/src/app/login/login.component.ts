@@ -6,7 +6,7 @@ import { MessengerService } from '../messenger.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss', '../form.scss']
 })
 export class LoginComponent implements OnInit {
   public loginForm: FormGroup = new FormGroup({

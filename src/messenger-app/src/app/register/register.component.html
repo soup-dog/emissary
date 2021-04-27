@@ -1,20 +1,24 @@
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <label>
-        Username: <input type="text" name="" id="" formControlName="username">
-    </label>
-    <button type="submit" [disabled]="!registerForm.valid" class="big-button">Register</button>
-    <div *ngIf="username!.invalid && (username?.dirty || username?.touched)">
-        <div *ngIf="username!.errors?.required">
-            Username is required.
+<div class="form-container">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="input-label-group">
+            <label>Username</label>
+            <input type="text" name="" id="" formControlName="username">
         </div>
-        <div *ngIf="username!.errors?.minLength">
-            Username must be at least one character long.
+        <button type="submit" [disabled]="!registerForm.valid" class="big-button">Register</button>
+        <div *ngIf="username!.invalid && (username?.dirty || username?.touched)" class="warning">
+            <div *ngIf="username!.errors?.required">
+                Username is required.
+            </div>
+            <div *ngIf="username!.errors?.minLength">
+                Username must be at least one character long.
+            </div>
+            <div *ngIf="username!.errors?.usernameTaken">
+                That username is taken.
+            </div>
         </div>
-        <div *ngIf="username!.errors?.usernameTaken">
-            That username is taken.
-        </div>
-    </div>
-</form>
+    </form>
+    <p>Already have an account? <a routerLink="/login.html">Login here</a>.</p>
+</div>
 <app-popup [shown]="shown">
     <h1 class="popup-header">Registration successful!</h1>
     <p>

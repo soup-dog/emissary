@@ -1,12 +1,17 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <label for="">
-        Username: <input type="text" name="" id="" formControlName="username">
-    </label>
-    <label for="">
-        Key File: <input type="file" name="" id="" formControlName="keyFile">
-    </label>
-    <button type="submit" class="big-button">Login</button>
-</form>
-<div *ngIf="loginError">
-    Username or key is incorrect.
+<div class="form-container">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="input-label-group">
+            <label for="">Username</label>
+            <input type="text" name="" id="" formControlName="username">
+        </div>
+        <div class="input-label-group">
+            <label for="">Key File</label>
+            <input type="file" name="" id="" formControlName="keyFile">
+        </div>
+        <button type="submit" class="big-button">Login</button>
+        <div *ngIf="loginError" class="warning">
+            Username or key is incorrect.
+        </div>
+    </form>
+    <p>Don't have an account? <a routerLink="/register.html">Register</a> an account.</p>
 </div>
