@@ -76,6 +76,7 @@ a:hover {
 
 .section-container section img {
     width: 40vw;
+    margin: 5vh;
 }
 
 .info-block {
