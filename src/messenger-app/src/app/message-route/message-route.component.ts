@@ -8,7 +8,7 @@ import { MessengerService } from '../messenger.service';
 @Component({
   selector: 'app-message-route',
   templateUrl: './message-route.component.html',
-  styleUrls: ['./message-route.component.scss']
+  styleUrls: ['./message-route.component.scss', '../messenger/messenger.component.scss']
 })
 export class MessageRouteComponent implements OnInit {
   public messageRoute: Route | null = null;

@@ -1,10 +1,9 @@
-.route-list-container {
+.list-container {
     display: flex;
     width: 100%;
 }
 
-.container {
-    height: 95vh;
+.list {
     border: 1px solid grey;
 }
 
@@ -14,4 +13,9 @@ app-route-list {
 
 app-message-list {
     flex-grow: 2;
+}
+
+.app-root {
+    display: flex;
+    flex-direction: column;
 }
