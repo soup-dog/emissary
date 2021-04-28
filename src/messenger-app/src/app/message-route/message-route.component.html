@@ -2,7 +2,8 @@
     <app-top-bar *ngIf="ready"></app-top-bar>
     <div class="list-container">
         <app-route-list *ngIf="ready"></app-route-list>
-        <div>
+        <div class="message-list-container">
+            <app-messages-top-bar></app-messages-top-bar>
             <app-message-list *ngIf="ready" [messages]="messageRoute!.messages"></app-message-list>
             <div class="message-form">
                 <form [formGroup]="messageForm" (ngSubmit)="onMessageFormSubmit()">
