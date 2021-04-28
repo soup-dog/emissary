@@ -76,3 +76,12 @@ input[type="text"] {
     border-radius: 4px;
     padding: 5px 10px;
 }
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: lightgrey;
+    border-radius: 2.5px;
+}
