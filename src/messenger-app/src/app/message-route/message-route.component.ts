@@ -22,6 +22,10 @@ export class MessageRouteComponent implements OnInit {
   ngOnInit(): void {
     this.routeIndex = Number(this.route.snapshot.paramMap.get('routeIndex'));
     this.messageRoute = this.messenger.requireSession().user.routes[this.routeIndex];
+    this.route.paramMap.subscribe(paramMap => {
+      this.routeIndex = Number(paramMap.get('routeIndex'));
+      this.messageRoute = this.messenger.requireSession().user.routes[this.routeIndex];
+    });
   }
 
   onMessageFormSubmit(): void {
