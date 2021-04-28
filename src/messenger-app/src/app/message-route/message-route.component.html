@@ -1,11 +1,15 @@
-<app-top-bar></app-top-bar>
-<div class="list-container">
-    <app-route-list></app-route-list>
-    <app-message-list [messages]="messageRoute!.messages" class="list"></app-message-list>
-</div>
-<div class="message-form">
-    <form [formGroup]="messageForm" (ngSubmit)="onMessageFormSubmit()">
-        <input type="text" name="" id="" formControlName="message">
-        <button class="big-button" type="submit">Send</button>
-    </form>
+<div class="app-root">
+    <app-top-bar *ngIf="ready"></app-top-bar>
+    <div class="list-container">
+        <app-route-list *ngIf="ready"></app-route-list>
+        <div>
+            <app-message-list class="list" *ngIf="ready" [messages]="messageRoute!.messages"></app-message-list>
+            <div class="message-form">
+                <form [formGroup]="messageForm" (ngSubmit)="onMessageFormSubmit()">
+                    <input type="text" name="" id="" formControlName="message">
+                    <button class="big-button" type="submit">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

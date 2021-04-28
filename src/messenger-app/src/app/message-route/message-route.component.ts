@@ -31,4 +31,8 @@ export class MessageRouteComponent implements OnInit {
     }); // clear the text input
   }
 
+  public get ready() {
+    return this.messenger.ready;
+  }
+
 }

@@ -1,6 +1,6 @@
 .list-container {
     display: flex;
-    width: 100%;
+    overflow: hidden;
 }
 
 .list {
@@ -13,9 +13,12 @@ app-route-list {
 
 app-message-list {
     flex-grow: 2;
+    display: flex;
+    flex-direction: column;   
 }
 
 .app-root {
     display: flex;
     flex-direction: column;
+    height: 100vh;
 }
