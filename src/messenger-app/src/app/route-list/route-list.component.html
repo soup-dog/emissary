@@ -18,9 +18,8 @@
         <button type="submit" class="big-button">Add route</button>
     </form>
 </app-popup>
-<div>
-    
-</div>
-<div *ngFor="let route of routes; index as i">
-    <app-small-profile [routerLink]="['/route', i]" [userInfo]="route.userInfo"></app-small-profile>
+<div class="route-list">
+    <div *ngFor="let route of routes; index as i">
+        <app-small-profile [routerLink]="['/route', i]" [userInfo]="route.userInfo"></app-small-profile>
+    </div>
 </div>

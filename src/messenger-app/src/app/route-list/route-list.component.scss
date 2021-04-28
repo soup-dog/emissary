@@ -20,3 +20,9 @@
     float: right;
     cursor: pointer;
 }
+
+.route-list {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}

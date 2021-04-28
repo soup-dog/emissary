@@ -15,6 +15,7 @@ import { TopBarComponent } from './top-bar/top-bar.component';
 import { PopupComponent } from './popup/popup.component';
 import { RouteListComponent } from './route-list/route-list.component';
 import { MessageRouteComponent } from './message-route/message-route.component';
+import { MessagesTopBarComponent } from './messages-top-bar/messages-top-bar.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { MessageRouteComponent } from './message-route/message-route.component';
     PopupComponent,
     RouteListComponent,
     MessageRouteComponent,
+    MessagesTopBarComponent,
   ],
   imports: [
     BrowserModule,

@@ -5,7 +5,7 @@ import { MessengerService } from '../messenger.service';
 @Component({
   selector: 'app-messenger',
   templateUrl: './messenger.component.html',
-  styleUrls: ['./messenger.component.scss']
+  styleUrls: ['./messenger.component.scss', '../list.scss']
 })
 export class MessengerComponent implements OnInit {
 

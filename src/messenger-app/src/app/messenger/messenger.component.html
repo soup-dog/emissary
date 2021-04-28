@@ -2,6 +2,9 @@
     <app-top-bar *ngIf="ready"></app-top-bar>
     <div class="list-container">
         <app-route-list *ngIf="ready"></app-route-list>
-        <app-message-list class="list" *ngIf="ready" [messages]="messages"></app-message-list>
+        <div class="message-list-container">
+            <app-messages-top-bar></app-messages-top-bar>
+            <app-message-list *ngIf="ready" [messages]="messages"></app-message-list>
+        </div>
     </div>
 </div>
