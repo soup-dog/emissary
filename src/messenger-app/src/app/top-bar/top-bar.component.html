@@ -1,4 +1,17 @@
 <header class="neumorphic">
     <app-small-profile [userInfo]="userInfo"></app-small-profile>
+    <div class="button-container">
+        <a routerLink="/app.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180.68 194.68" class="profile-picture button">
+                <path class="button-image" fill="currentColor" d="M490,457.77V370.69a2.73,2.73,0,0,0-2.69-2.73l-25.64-.37a2.73,2.73,0,0,1-2-4.57l86.8-95.31a2.73,2.73,0,0,1,4,0l40,43.63a2.74,2.74,0,0,0,4.75-1.85V287.92a2.73,2.73,0,0,1,2.73-2.73h18.21a2.74,2.74,0,0,1,2.74,2.73v53.34a2.72,2.72,0,0,0,.71,1.84L637.93,363a2.73,2.73,0,0,1-2,4.58l-26.27.37a2.73,2.73,0,0,0-2.69,2.73v87.08a2.73,2.73,0,0,1-2.73,2.73h-35a2.73,2.73,0,0,1-2.73-2.73V403.23a2.73,2.73,0,0,0-2.73-2.73H534.23a2.73,2.73,0,0,0-2.73,2.73v54.54a2.73,2.73,0,0,1-2.73,2.73h-36A2.73,2.73,0,0,1,490,457.77Z" transform="translate(-458.48 -266.32)"/>
+            </svg>
+        </a>
+        <a routerLink="/account.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 241 241" class="profile-picture button">
+                <polygon class="button-image" fill="currentColor" points="159.09 204.29 186.5 224.92 224.25 187.16 203.62 159.46 206.82 152.46 241 147.46 241 94.06 207.04 89.27 204.13 82.06 224.77 54.36 187.01 16.6 159.61 37.23 152.15 34.18 147.15 0 93.75 0 88.96 33.96 82.06 36.87 54.36 16.23 16.6 53.99 37.23 81.39 33.96 88.54 0 93.33 0 146.73 34.18 151.73 36.71 159.09 16.08 186.5 53.84 224.25 81.55 203.62 88.23 207.04 93.02 241 146.42 241 151.42 206.82 159.09 204.29"/>
+                <circle  class="button-background" fill="currentColor" cx="120.75" cy="121" r="41"/>
+            </svg>
+        </a>
+    </div>
     <button (click)="logout()" class="big-button">Logout</button>
 </header>

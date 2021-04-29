@@ -4,3 +4,25 @@ header {
     align-items: center;
     justify-content: space-between;
 }
+
+.button-container {
+    display: flex;
+    justify-content: space-evenly;
+    width: 20%;
+}
+
+.button {
+    width: 4vh;
+    height: 4vh;
+    border-radius: 2.5vh;
+    padding: 0.5vh;
+    background-color: var(--dark);
+}
+
+.button-image {
+    color: var(--light);
+}
+
+.button-background {
+    color: var(--dark);
+}
