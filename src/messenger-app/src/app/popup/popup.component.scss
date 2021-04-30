@@ -1,11 +1,13 @@
 div {
     width: 50vw;
+    max-height: 50vh;
     position: absolute;
     top: 25vh;
     left: 25vw;
     z-index: 1;
     padding: 2.5vw;
     background-color: white;
+    overflow-y: scroll;
 }
 
 .hidden {
