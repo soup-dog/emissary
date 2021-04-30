@@ -4,18 +4,24 @@
 </div>
 <app-popup [shown]="showNewRoutePopup">
     <img src="./assets/cross.svg" alt="popup close button" class="cross" (click)="showNewRoutePopup = false">
-    <p>Generate a new route:</p>
+    <label>Generate a new route</label>
+    <br>
     <button class="big-button" (click)="onCreateRoute()">Generate</button>
     <div *ngIf="routeCreated">
         <p>New route generated! Your route word-key is:</p>
         <h1>{{ createRouteWordKey }}</h1>
+        <p>Give it to another user so that they can send messages to you.</p>
     </div>
     <p>Add a route by word-key:</p>
     <form [formGroup]="addRouteForm" (ngSubmit)="onAddRouteFormSubmit()">
-        <label>
-            Word-key: <input type="text" name="" id="" formControlName="wordKey">
-        </label>
-        <button type="submit" class="big-button">Add route</button>
+        <input type="text" name="" id="" formControlName="wordKey">
+        <button type="submit" class="big-button" [disabled]="!addRouteForm.valid">Add route</button>
+        <div *ngIf="wordKeyControl!.hasError('required')" class="warning">
+            A word key is required.
+        </div>
+        <div *ngIf="wordKeyControl!.hasError('hasRoute')" class="warning">
+            You already have this route.
+        </div>
     </form>
 </app-popup>
 <div class="route-list">

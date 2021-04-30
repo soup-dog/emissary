@@ -71,6 +71,16 @@ export class MessengerService {
     return this.requireSession().user.routes;
   }
 
+  public async hasRoute(wordKey: string[]): Promise<boolean> {
+    const routes = this.requireSession().user.routes;
+    const routeWordKeys = new Array<Array<string>>(routes.length);
+    for (let i = 0; i < routes.length; i++) {
+      routeWordKeys[i] = await routes[i].key.toWords();
+    }
+    console.log(routeWordKeys.some(routeWordKey => routeWordKey.join(' ') === wordKey.join(' ')));
+    return routeWordKeys.some(routeWordKey => routeWordKey.join(' ') === wordKey.join(' '));
+  }
+
   public setUserPfpFromFile(file: File): void {
     const reader = new FileReader();
     reader.onloadend = () => {
