@@ -11,7 +11,7 @@ import { MessengerService } from '../messenger.service';
 export class LoginComponent implements OnInit {
   public loginForm: FormGroup = new FormGroup({
     username: new FormControl(''),
-    keyFile: new FormControl('')
+    wordKey: new FormControl('')
   });
   public loginError: boolean = false;
 
@@ -21,11 +21,7 @@ export class LoginComponent implements OnInit {
   }
 
   public onSubmit() {
-    try {
-      this.messenger.login(this.loginForm.value["username"], this.loginForm.value["keyFile"]); 
-    }
-    catch(e) {
-      this.loginError = true;
-    }
+    this.messenger.login(this.loginForm.value["username"], this.loginForm.value['wordKey'].split(' '))
+      .catch(() => this.loginError = true); 
   }
 }

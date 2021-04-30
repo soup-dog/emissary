@@ -115,28 +115,24 @@ export class MessengerService {
     this.pushSession(); // push updated session to storage
   }
 
-  public async register(username: string): Promise<string> {
+  public async register(username: string): Promise<string[]> {
     const user = new User(username); // create a new user with the given username
     user.pfpDataURL = defaultPfp; // set pfp to default pfp
     const key = await AESCBCKey.generate(); // generate new UserKey
     this._session = new Session(user, key); // create session from new user and key
     this.pushSession(); // push session to storage
-    return await key.toDataURL(); // return key as a data url
+    return await key.toWords(); // return key as a word key
   }
   
-  public login(username: string, keyFile: File) {
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const key = await AESCBCKey.fromJSON(JSON.parse(<string>reader.result)) // load key from file contents
-      const ciphertext = this._users.get(username); // get ciphertext from users
-      const plaintext = await key.decrypt(<ArrayBuffer>ciphertext); // cast to arraybuffer and decrypt
-      const user = await User.fromJSON(JSON.parse(new TextDecoder().decode(plaintext))); // load user from JSON string
-      this._session = new Session(user, key); // create session from user and key
-      this.pushSession();
-      this.pullMessages();
-      this.router.navigate([MessengerService.APP_ROUTE]); // navigate to main page
-    }
-    reader.readAsText(keyFile);
+  public async login(username: string, wordKey: string[]): Promise<void> {
+    const key = await AESCBCKey.fromWords(wordKey) // load key from word key
+    const ciphertext = this._users.get(username); // get ciphertext from users
+    const plaintext = await key.decrypt(<ArrayBuffer>ciphertext); // cast to arraybuffer and decrypt
+    const user = await User.fromJSON(JSON.parse(new TextDecoder().decode(plaintext))); // load user from JSON string
+    this._session = new Session(user, key); // create session from user and key
+    this.pushSession();
+    this.pullMessages();
+    this.router.navigate([MessengerService.APP_ROUTE]); // navigate to main page
   }
 
   public logout() {

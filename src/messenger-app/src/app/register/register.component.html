@@ -19,16 +19,14 @@
     </form>
     <p>Already have an account? <a routerLink="/login.html">Login here</a>.</p>
 </div>
-<app-popup [shown]="shown">
+<app-popup [shown]="popupShown">
     <h1 class="popup-header">Registration successful!</h1>
     <p>
-        Welcome to Emissary, {{ registerdUsername }}! Here is a download link to your very own personal key. It is unique and the <b>only way to access your account</b>, so <b>don't lose it</b> and <b>never share it with anyone</b>.
+        Welcome to Emissary, {{ registerdUsername }}! Here is your very own personal word key. Write it down or store it somewhere secure (not on this public computer). It is unique and the <b>only way to access your account</b>, so <b>don't lose it</b> and <b>never share it with anyone</b>.
     </p>
-    <div class="button-container">
-        <a [href]="keyDataURL" [download]="registerdUsername + '.key.json'" class="big-button" (click)="this.downloaded = true">Download</a>
-    </div>
+    <h1>{{ wordKey }}</h1>
 
     <div class="button-container">
-        <a routerLink="/app.html" class="big-button" [ngClass]="{'disabled': !downloaded}">Continue</a>
+        <a routerLink="/app.html" class="big-button">Continue</a>
     </div>
 </app-popup>

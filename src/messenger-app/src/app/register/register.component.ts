@@ -18,9 +18,8 @@ export class RegisterComponent implements OnInit {
     ])
   });
   registerdUsername: string = "";
-  shown: boolean = false;
-  keyDataURL: SafeUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // rickroll anyone who tries to download the key file before registering
-  downloaded: boolean = false;
+  popupShown: boolean = false;
+  wordKey: string = "";
 
   constructor(private messenger: MessengerService, private sanitiser: DomSanitizer, private router: Router) { }
 
@@ -39,10 +38,10 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     this.messenger.register(this.registerForm.value["username"])
-      .then((keyDataURL) => {
-        this.keyDataURL = this.sanitiser.bypassSecurityTrustUrl(keyDataURL); // set key data url
+      .then((wordKey) => {
+        this.wordKey = wordKey.join(' ');
         this.registerdUsername = this.messenger.requireSession().user.username; // set username
-        this.shown = true; // show popup
+        this.popupShown = true; // show popup
       });
   }
 }
