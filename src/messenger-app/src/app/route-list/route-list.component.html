@@ -28,4 +28,7 @@
     <div *ngFor="let route of routes; index as i">
         <app-small-profile [routerLink]="['/route', i]" [userInfo]="route.userInfo"></app-small-profile>
     </div>
+    <div *ngIf="routes.length === 0" class="new-user-info">
+        It looks like you don't have any routes yet, create or add one with the + icon in the top right.
+    </div>
 </div>

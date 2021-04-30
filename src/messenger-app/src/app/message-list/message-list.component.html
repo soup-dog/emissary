@@ -2,3 +2,6 @@
     <a [routerLink]="['/route', message.routeIndex]">{{ message.author.username }}</a>
     <p>{{ message.content }}</p>
 </div>
+<div *ngIf="messages.length === 0">
+    :( You have no messages yet. Create or add a new route with the + icon in the top right of the route list to start sending messages.
+</div>
