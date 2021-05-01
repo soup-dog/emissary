@@ -4,11 +4,11 @@
 
 .header-links {
     display: flex;
+    justify-content: space-evenly;
 }
 
 .header-links a {
     text-align: center;
-    /* vertical-align: middle; */
     color: var(--dark);
     background-color: var(--light);
     padding: 5%;

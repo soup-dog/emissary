@@ -15,6 +15,17 @@ body {
     color: var(--dark);
 }
 
+footer {
+    background-color: var(--dark);
+    text-align: center;
+    padding: 5%;
+}
+
+footer p {
+    margin: 0;
+    color: var(--light);
+}
+
 h1 {
     font-family: 'Noto sans', sans-serif;
     font-weight: 700;
@@ -47,59 +58,4 @@ a:hover {
     color: var(--light);
     text-decoration: none;
     box-shadow: 0 0 0 1px rgba(53,72,91,.1),0 3px 2px rgba(0,0,0,.04),0 7px 5px rgba(0,0,0,.02),0 13px 10px rgba(0,0,0,.02),0 22px 17px rgba(0,0,0,.02);
-}
-
-.section-container {
-    margin-top: 20%;
-}
-
-.section-container section {
-    padding: 5%;
-    width: 90%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-}
-
-.section-container section * {
-    margin: 0px;
-}
-
-.section-container svg:first-child {
-    display: block;
-}
-
-.section-container svg:last-child {
-    display: block;
-    transform: scaleY(-1); /* horizontal flip */
-}
-
-.section-container section img {
-    width: 40vw;
-}
-
-.info-block {
-    display: block;
-    width: 500px;
-    margin: 0;
-}
-
-.info-block h1 {
-    font-size: min(4em, 10vw);
-}
-
-.light.section-container section {
-    background-color: var(--light);
-}
-
-.light.section-container svg:first-child path {
-    color: var(--light);
-}
-
-.light.section-container svg:last-child path {
-    color: var(--light);
-}
-
-.light.section-container section * {
-    color: var(--dark);
 }
