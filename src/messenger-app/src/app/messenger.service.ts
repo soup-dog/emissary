@@ -1,5 +1,5 @@
 import { ThrowStmt } from '@angular/compiler';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, Message, AESCBCKey, Route, UserInfo, Session } from './messenger';
 
@@ -18,6 +18,7 @@ export class MessengerService {
   private _session: Session | null = null;
   private _users: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>();
   public ready: boolean = false;
+  public readyEvent: EventEmitter<void> = new EventEmitter();
 
   public get sessionAvailable(): boolean {
     return sessionStorage.getItem(MessengerService.USER_SESSION_STORAGE_KEY) != null;
@@ -28,8 +29,10 @@ export class MessengerService {
   }
 
   constructor(private router: Router) {
+    this.readyEvent.subscribe(() => {console.log("messenger event")});
     this.pullSession() // pull session from session storage if available
     .then(() => {
+      this.readyEvent.emit(); // fire event
       this.ready = true; // set ready
       this.pullMessages(); // pull new messages from mailbox
     });
