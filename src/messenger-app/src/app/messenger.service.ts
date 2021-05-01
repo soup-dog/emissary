@@ -140,7 +140,8 @@ export class MessengerService {
     .then(() => { // wait for session push completion
       this._session = null; // set session to null
       sessionStorage.removeItem(MessengerService.USER_SESSION_STORAGE_KEY); // clear user session from session storage
-      window.location.pathname = MessengerService.LANDING_HOME_URL; // navigate out of app to home url
+      const pathParts = window.location.pathname.split('/');
+      window.location.pathname = pathParts.slice(0, pathParts.length - 2).join('/') + MessengerService.LANDING_HOME_URL; // navigate out of app to home url
     });
   }
 
