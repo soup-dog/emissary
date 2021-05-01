@@ -6,11 +6,16 @@ output_dir = dist
 app_output_dir = $(output_dir)/app
 app_routes = "app" "register" "account" "login"
 
+app_build_args = 
+
 ifdef PROD
-	app_build_args = --prod
-else
-	app_build_args = 
+	app_build_args += --prod
 endif
+
+ifdef BASE_HREF
+	app_build_args += --base-href="$(BASE_HREF)"
+endif
+
 
 .PHONY: all
 all: landing app
@@ -30,7 +35,7 @@ landing:
 
 .PHONY: app
 app: app-static-fix
-	cd $(app_dir) && ng build $(app_build_args)
+	cd $(app_dir) && ng build$(app_build_args)
 	make app-static-fix
 
 .PHONY: app-static-fix
