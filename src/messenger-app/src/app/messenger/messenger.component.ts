@@ -9,7 +9,9 @@ import { MessengerService } from '../messenger.service';
 })
 export class MessengerComponent implements OnInit {
 
-  constructor(private messenger: MessengerService) { }
+  constructor(private messenger: MessengerService) { 
+    this.messenger.readyEvent.subscribe(this.messenger.requireLoggedIn.bind(this.messenger));
+  }
 
   ngOnInit(): void {
   }

@@ -10,7 +10,9 @@ import { MessengerService } from '../messenger.service';
 export class AccountComponent implements OnInit {
   pfpControl = new FormControl();
 
-  constructor(private messenger: MessengerService) {}
+  constructor(private messenger: MessengerService) {
+    this.messenger.readyEvent.subscribe(this.messenger.requireLoggedIn.bind(this.messenger));
+  }
 
   ngOnInit(): void {
     this.pfpControl.valueChanges.subscribe(file => this.messenger.setUserPfpFromFile(file)) // subscribe with hack to keep this in context 
