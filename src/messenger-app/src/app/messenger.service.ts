@@ -139,12 +139,12 @@ export class MessengerService {
 
   public logout() {
     this.pushSession() // push session to storage
-    .then(() => { // wait for session push completion
-      this._session = null; // set session to null
-      sessionStorage.removeItem(MessengerService.USER_SESSION_STORAGE_KEY); // clear user session from session storage
-      const pathParts = window.location.pathname.split('/');
-      window.location.pathname = pathParts.slice(0, pathParts.length - 2).join('/') + MessengerService.LANDING_HOME_URL; // navigate out of app to home url
-    });
+      .then(() => { // wait for session push completion
+        this._session = null; // set session to null
+        sessionStorage.removeItem(MessengerService.USER_SESSION_STORAGE_KEY); // clear user session from session storage
+        const pathParts = window.location.pathname.split('/');
+        window.location.pathname = pathParts.slice(1, pathParts.length - 2).join('/') + '/' + MessengerService.LANDING_HOME_URL; // navigate out of app to home url
+      });
   }
 
   /**
