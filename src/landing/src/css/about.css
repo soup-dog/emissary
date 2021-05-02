@@ -3,28 +3,41 @@ body {
 }
 
 section {
-    width: 30%;
-    padding: 5%;
-    margin: 5%;
-    background-color: var(--light);
-    border-radius: 5px;
-    transition: transform 600ms ease-in-out;
+    display: flex;
+    margin-top: 5%;
+    box-sizing: border-box;
 }
 
 section div {
     padding: 5%;
+    width: 50%;
+    background-color: var(--light);
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
-section.right {
-    float: right;
+@media only screen and (max-width: 500px) {
+    section div {
+        width: 80%;
+    }
+
+    section {
+        justify-content: center;
+    }
 }
 
-section img {
-    width: 50vw;
-    position: absolute;
-    z-index: -1;
+@media only screen and (min-width: 501px) {
+    section {
+        margin-left: 5%;
+    }
+
+    section.right {
+        justify-content: flex-end;
+        margin-left: 0;
+        margin-right: 5%;
+    }
 }
 
-section.right img {
-    transform: scaleX(-1); /* horizontal flip */
+footer {
+    margin-top: 10%;
 }
