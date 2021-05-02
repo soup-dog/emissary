@@ -29,7 +29,6 @@ export class MessengerService {
   }
 
   constructor(private router: Router) {
-    this.readyEvent.subscribe(() => {console.log("messenger event")});
     this.pullSession() // pull session from session storage if available
     .then(() => {
       this.readyEvent.emit(); // fire event
